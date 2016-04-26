@@ -27,4 +27,8 @@ public class NavigateActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PreparationActivity.class);
         startActivity(intent);
     }
+    public void profile(View view){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
 }

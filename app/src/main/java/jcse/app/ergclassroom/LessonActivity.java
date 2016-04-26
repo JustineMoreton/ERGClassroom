@@ -41,6 +41,7 @@ public class LessonActivity extends Activity {
             //text.setText("Image#"+(i+1));
 
             mainLayout.addView(imagesscroll);
+
         }
 
     }
