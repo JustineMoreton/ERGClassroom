@@ -15,7 +15,7 @@
     <Button
         android:text="Lesson 1"
         android:id="@+id/button5"
-        android:onClick="lesson"
+        android:onClick="startlesson"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="88dp"
@@ -28,6 +28,7 @@
     <Button
         android:text="Lesson 2"
         android:id="@+id/button6"
+
         android:layout_below="@+id/button5"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"

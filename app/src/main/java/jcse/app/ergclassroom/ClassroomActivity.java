@@ -27,9 +27,10 @@ public class ClassroomActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
-    public void lesson(View view) {
-        Intent intent = new Intent(this, LessonActivity.class);
+    public void startlesson(View view) {
+        Intent intent = new Intent(this, StartLessonActivity.class);
         startActivity(intent);
     }
+
+
 }

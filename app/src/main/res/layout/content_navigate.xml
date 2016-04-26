@@ -27,6 +27,7 @@
 
     <Button
         android:text="Preparation"
+        android:onClick="preparation"
         android:id="@+id/button2"
         android:layout_below="@+id/button"
         android:layout_centerHorizontal="true"

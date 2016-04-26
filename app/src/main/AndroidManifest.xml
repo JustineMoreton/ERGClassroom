@@ -44,6 +44,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.ClassroomActivity" />
         </activity>
+        <activity
+            android:name=".PreparationActivity"
+            android:label="@string/title_activity_preparation"
+            android:parentActivityName=".ClassroomActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jcse.app.ergclassroom.ClassroomActivity" />
+        </activity>
+        <activity
+            android:name=".StartLessonActivity"
+            android:label="@string/title_activity_start_lesson"
+            android:parentActivityName=".ClassroomActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jcse.app.ergclassroom.ClassroomActivity" />
+        </activity>
     </application>
 
 </manifest>

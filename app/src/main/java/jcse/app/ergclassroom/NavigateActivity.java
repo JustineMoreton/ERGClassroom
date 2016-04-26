@@ -16,11 +16,15 @@ public class NavigateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     public void goToClassroom(View view){
         Intent intent = new Intent(this, ClassroomActivity.class);
         startActivity(intent);
 
+    }
+    public void preparation(View view){
+        Intent intent = new Intent(this, PreparationActivity.class);
+        startActivity(intent);
     }
 }
