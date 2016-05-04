@@ -71,6 +71,28 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.ClassroomActivity" />
         </activity>
+        <activity
+            android:name=".TabbedActivity"
+            android:label="@string/title_activity_tabbed"
+            android:parentActivityName=".ClassroomActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jcse.app.ergclassroom.ClassroomActivity" />
+        </activity>
+        <activity
+            android:name=".FinishLessonActivity"
+            android:label="@string/title_activity_finish_lesson"
+            android:parentActivityName=".TabbedActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jcse.app.ergclassroom.TabbedActivity" />
+        </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

@@ -3,7 +3,11 @@
     <string name="title_activity_navigate">NavigateActivity</string>
     <string name="title_activity_classroom">ClassroomActivity</string>
     <string name="title_activity_lesson">LessonActivity</string>
+    <string name="Well_done_lesson_done">Well done! How did it go?</string>
+    <string name="Did_you_complete">Did you complete:</string>
+    <string name="lesson_outcome">Did most of your learners achieve the lesson outcome?</string>
     <string name="large_text">
+
         "Material is the metaphor.\n\n"
 
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
@@ -97,4 +101,6 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_start_lesson">StartLessonActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_tabbed">TabbedActivity</string>
+    <string name="title_activity_finish_lesson">FinishLessonActivity</string>
 </resources>
