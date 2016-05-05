@@ -40,8 +40,8 @@ public class TabbedActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private static int[] imgid = {
-            R.mipmap.classimage1,
-            R.mipmap.classimage2
+            R.mipmap.activity_1,
+            R.mipmap.activity_2
     };
     private ViewPager mViewPager;
     /**
