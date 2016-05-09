@@ -88,11 +88,24 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.TabbedActivity" />
-        </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        </activity>
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".PreparationItemsActivity"
+            android:label="@string/title_activity_preparation_items"
+            android:parentActivityName=".PreparationActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jcse.app.ergclassroom.PreparationActivity" />
+        </activity>
     </application>
 
 </manifest>

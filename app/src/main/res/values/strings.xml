@@ -103,4 +103,6 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="title_activity_finish_lesson">FinishLessonActivity</string>
+    <string name="title_activity_preparation_item">PreparationItemActivity</string>
+    <string name="title_activity_preparation_items">PreparationItemsActivity</string>
 </resources>
