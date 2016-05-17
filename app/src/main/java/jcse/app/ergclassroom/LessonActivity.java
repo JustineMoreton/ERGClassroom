@@ -9,9 +9,10 @@ import android.widget.LinearLayout;
 public class LessonActivity extends Activity {
     private LinearLayout mainLayout;
     int[] imgid= new int[]{
-            R.mipmap.activity_1,
-            R.mipmap.activity_2
+            R.drawable.activity_1,
+            R.drawable.activity_2
     };
+
     private View imagesscroll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

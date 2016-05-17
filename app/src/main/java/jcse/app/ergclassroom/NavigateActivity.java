@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
 public class NavigateActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,8 +16,14 @@ public class NavigateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigate);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
+        final Button button =(Button) findViewById(R.id.button4);
+        button.setOnClickListener(new View.OnClickListener(){
+                                      @Override
+                                      public void onClick(View view){
+                                          button.setText(R.string.synced);
+                                      }
+                                  }
+        );
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     public void goToClassroom(View view){

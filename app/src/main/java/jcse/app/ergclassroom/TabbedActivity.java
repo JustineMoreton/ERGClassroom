@@ -24,8 +24,11 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.util.HashMap;
+
 public class TabbedActivity extends AppCompatActivity {
 
+    HashMap<String,int[]> map =new HashMap<String, int[]>();
     /**
      * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -40,20 +43,37 @@ public class TabbedActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private static int[] imgid = {
+
             R.drawable.activity_1,
             R.drawable.activity_2
     };
+    int[] prepitems =new int[]{
+            R.drawable.management_note_001,
+            R.drawable.management_note_002
+    };
+    //static HashMap<String,int[]> map;
     private ViewPager mViewPager;
+    Intent intent;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
 
+/*    public static int[] getImgid() {
+
+        map=(HashMap<String,int[]>)intent.getSerializableExtra("maparray");
+        int[] arrayname = map.get("notelist");
+        return arrayname;
+    }*/
+    //static int[] imgArray =getImgid();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed);
+        int menu = getIntent().getIntExtra("position",0);
+        int flag = getIntent().getFlags();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,15 +90,29 @@ public class TabbedActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
+        if(flag==0) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
 
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), FinishLessonActivity.class);
-                startActivity(intent, lessonArgs);
-            }
-        });
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), FinishLessonActivity.class);
 
+                    startActivity(intent, lessonArgs);
+                }
+            });
+        }
+        if(flag==1) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), PreparationListActivity.class);
+                    map.put("notelist",prepitems);
+                    intent.putExtra("maparray",map);
+                    startActivity(intent, lessonArgs);
+                }
+            });
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

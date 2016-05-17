@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">ERGClassroom</string>
+    <string name="app_name">EGRClassroom</string>
     <string name="title_activity_navigate">NavigateActivity</string>
     <string name="title_activity_classroom">ClassroomActivity</string>
     <string name="title_activity_lesson">LessonActivity</string>
     <string name="Well_done_lesson_done">Well done! How did it go?</string>
     <string name="Did_you_complete">Did you complete:</string>
     <string name="lesson_outcome">Did most of your learners achieve the lesson outcome?</string>
+    <string name="sync">Sync</string>
+    <string name="synced">Synced</string>
     <string name="large_text">
 
         "Material is the metaphor.\n\n"
@@ -97,12 +99,13 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_preparation">PreparationActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_start_lesson">StartLessonActivity</string>
-    <string name="title_activity_profile">ProfileActivity</string>
-    <string name="title_activity_tabbed">TabbedActivity</string>
-    <string name="title_activity_finish_lesson">FinishLessonActivity</string>
-    <string name="title_activity_preparation_item">PreparationItemActivity</string>
-    <string name="title_activity_preparation_items">PreparationItemsActivity</string>
+    <string name="title_activity_preparation"></string>
+    <string name="section_format">section: %1$d</string>
+    <string name="title_activity_start_lesson"></string>
+    <string name="title_activity_profile"></string>
+    <string name="title_activity_tabbed"></string>
+    <string name="title_activity_finish_lesson"></string>
+    <string name="title_activity_preparation_item"></string>
+    <string name="title_activity_preparation_items"></string>
+    <string name="title_activity_preparation_list">PreparationListActivity</string>
 </resources>

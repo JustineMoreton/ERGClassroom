@@ -9,6 +9,13 @@
     tools:context="jcse.app.ergclassroom.FinishLessonActivityFragment"
     tools:showIn="@layout/activity_finish_lesson">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,16 +37,7 @@
         android:layout_alignStart="@+id/textView4"
         android:layout_marginTop="92dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/lesson_outcome"
-        android:id="@+id/textView6"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/textView5" />
-
-    <Switch
+        <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textOn="YES"
@@ -47,18 +45,40 @@
         android:showText="true"
         android:id="@+id/switch1"
         android:layout_below="@+id/textView5"
-        android:layout_alignEnd="@+id/textView4" />
+        android:layout_alignEnd="@+id/textView4"
+            android:layout_gravity="right" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Activity 2: Singing song"
-        android:id="@+id/textView7"
-        android:layout_alignTop="@+id/switch1"
-        android:layout_alignStart="@+id/textView6" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Activity 2: Singing song"
+            android:id="@+id/textView7"
+            android:layout_alignTop="@+id/switch1"
+            android:layout_alignStart="@+id/textView6" />
 
-    <TextView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/lesson_outcome"
+            android:id="@+id/textView6"
+            android:layout_centerVertical="true"
+            android:layout_alignStart="@+id/textView5" />
+
+        <Switch
+        android:layout_width="82dp"
+        android:layout_height="0dp"
+        android:textOn="YES"
+        android:textOff="NO"
+        android:showText="true"
+        android:id="@+id/switch2"
+        android:layout_alignTop="@+id/textView8"
+        android:layout_alignEnd="@+id/textView4"
+        android:layout_gravity="right"
+            android:layout_weight="0.07" />
+
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -67,14 +87,6 @@
         android:layout_below="@+id/textView6"
         android:layout_alignStart="@+id/textView6" />
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOn="YES"
-        android:textOff="NO"
-        android:showText="true"
-        android:id="@+id/switch2"
-        android:layout_below="@+id/textView8"
-        android:layout_alignStart="@+id/switch1" />
+    </LinearLayout>
 
 </RelativeLayout>
