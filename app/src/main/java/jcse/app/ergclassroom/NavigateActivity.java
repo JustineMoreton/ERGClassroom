@@ -3,7 +3,6 @@ package jcse.app.ergclassroom;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,13 +12,17 @@ public class NavigateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Connection connection = new Connection(this);
         setContentView(R.layout.activity_navigate);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+      //  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+      //  setSupportActionBar(toolbar);
         final Button button =(Button) findViewById(R.id.button4);
         button.setOnClickListener(new View.OnClickListener(){
                                       @Override
                                       public void onClick(View view){
+                                          connection.createConnection();
+                                          Intent intent = new Intent(view.getContext(),HttpActivity.class);
+                                          startActivity(intent);
                                           button.setText(R.string.synced);
                                       }
                                   }

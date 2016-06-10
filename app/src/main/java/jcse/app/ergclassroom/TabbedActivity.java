@@ -42,42 +42,35 @@ public class TabbedActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private static int[] imgid = {
 
-            R.drawable.activity_1,
-            R.drawable.activity_2
-    };
     int[] prepitems =new int[]{
             R.drawable.management_note_001,
             R.drawable.management_note_002
     };
-    //static HashMap<String,int[]> map;
+
     private ViewPager mViewPager;
-    Intent intent;
+
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    static int[] arrayname;
 
-/*    public static int[] getImgid() {
-
-        map=(HashMap<String,int[]>)intent.getSerializableExtra("maparray");
-        int[] arrayname = map.get("notelist");
-        return arrayname;
-    }*/
-    //static int[] imgArray =getImgid();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_tabbed);
-        int menu = getIntent().getIntExtra("position",0);
         int flag = getIntent().getFlags();
+
+            map = (HashMap<String, int[]>) getIntent().getSerializableExtra("maparray");
+            arrayname = map.get("notelist");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -213,7 +206,7 @@ public class TabbedActivity extends AppCompatActivity {
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             ImageView imageView = (ImageView) rootView.findViewById(R.id.tabbedImageView);
-            imageView.setImageResource(imgid[(getArguments().getInt(ARG_SECTION_NUMBER)) - 1]);
+            imageView.setImageResource(arrayname[(getArguments().getInt(ARG_SECTION_NUMBER)) - 1]);
             return rootView;
         }
     }
@@ -239,7 +232,7 @@ public class TabbedActivity extends AppCompatActivity {
         public int getCount() {
             //return (count)number of pages from the database based on lesson number
             // Show 3 total pages.
-            return imgid.length;
+            return arrayname.length;
         }
 
         @Override

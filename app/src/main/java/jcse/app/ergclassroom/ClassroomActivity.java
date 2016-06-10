@@ -28,7 +28,7 @@ public class ClassroomActivity extends AppCompatActivity {
     }
     public void startlesson(View view) {
         Intent intent = new Intent(this, StartLessonActivity.class);
-        intent.addFlags(0);
+
         startActivity(intent);
     }
 
