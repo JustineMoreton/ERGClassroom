@@ -98,6 +98,8 @@ public class ParseJsonObjectFromFile extends Activity {
                                                 directoryValues.put("lessonid",lessonId);
                                                 JSONArray slides = lesson.getJSONArray("slides");
                                                 if(slides != null){
+                                                    int slideNumber=slides.length();
+                                                    directoryValues.put("slideNumber",""+(slideNumber));
                                                     for(int s =0; s<slides.length(); s++){
                                                         JSONObject slide=slides.getJSONObject(s);
                                                         if(slide != null){
@@ -106,6 +108,7 @@ public class ParseJsonObjectFromFile extends Activity {
                                                             directoryValues.put("slideSrcUrl"+ (s),slideSrcUrl);
                                                             String slideSrcDate=slide.getString("slideSrcDate");
                                                             String slideFileName=slide.getString("slideFileName");
+                                                            directoryValues.put("slideFileName"+(s),slideFileName);
                                                             JSONArray resources = slide.getJSONArray("resources");
                                                             if(resources != null){
                                                                 for(int r =0; r<resources.length(); r++){

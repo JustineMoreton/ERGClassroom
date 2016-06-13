@@ -1,18 +1,36 @@
 package jcse.app.ergclassroom;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.widget.ImageView;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
-
+private final String DEBUG_TAG="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        try {
+            File file = new File(getFilesDir(),"app_1/slide1.png");
+            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+            ImageView img = (ImageView) findViewById(R.id.imageView);
+            img.setImageBitmap(bitmap);
+        }catch (IOException IO){
+            //
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 /*        fab.setOnClickListener(new View.OnClickListener() {
@@ -24,5 +42,24 @@ public class ProfileActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
     }
+    public Bitmap loadBitmap(Context context, String picName){
 
+        Bitmap b = null;
+        FileInputStream fis;
+        try {
+            fis = context.openFileInput(picName);
+            b = BitmapFactory.decodeStream(fis);
+            fis.close();
+
+        }
+        catch (FileNotFoundException e) {
+            Log.d(DEBUG_TAG, "file not found");
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            Log.d(DEBUG_TAG, "io exception");
+            e.printStackTrace();
+        }
+        return b;
+    }
 }

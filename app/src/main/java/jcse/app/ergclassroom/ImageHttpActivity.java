@@ -11,13 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,27 +30,30 @@ public class ImageHttpActivity extends Activity {
 
     ArrayList<HashMap<String, String>> directoryValue = new ArrayList<HashMap<String, String>>();
 
+    HashMap<String, String>[] arrayofHashMaps;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         directoryValue = (ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("directoryValues");
-        getURl();
+
+        arrayofHashMaps = (HashMap<String, String>[]) directoryValue.toArray(new HashMap[directoryValue.size()]);
+
+        getURl(arrayofHashMaps);
         finish();
     }
 
     // When user clicks button, calls AsyncTask.
     // Before attempting to fetch the URL, makes sure that there is a network connection.
-    public void getURl() {
+    public void getURl(HashMap<String, String>[] arrayofHashMaps) {
         // Gets the URL from the UI's text field.
         //iterate through URLs
-        HashMap<String, String> getLessonMap = directoryValue.get(0);
 
-        String stringUrl = getLessonMap.get("slideSrcUrl0");
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadWebpageTask().execute(stringUrl);
+            new DownloadWebpageTask().execute(arrayofHashMaps);
         } else {
 
         }
@@ -64,13 +64,14 @@ public class ImageHttpActivity extends Activity {
     // has been established, the AsyncTask downloads the contents of the webpage as
     // an InputStream. Finally, the InputStream is converted into a string, which is
     // displayed in the UI by the AsyncTask's onPostExecute method.
-    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+    private class DownloadWebpageTask extends AsyncTask<HashMap<String,String>, Void, String> {
 
 
         @Override
-        protected String doInBackground(String... urls) {
+        protected String doInBackground(HashMap<String,String>... urls) {
             try {
-                return downloadUrl(urls[0]);
+
+                return downloadUrl(urls);
             } catch (IOException e) {
                 return "Unable to retrieve web page. URL may be invalid.";
             }
@@ -79,31 +80,43 @@ public class ImageHttpActivity extends Activity {
         // Given a URL, establishes an HttpUrlConnection and retrieves
 // the web page content as a InputStream, which it returns as
 // a string.
-        private String downloadUrl(String myurl) throws IOException {
+        private String downloadUrl(HashMap<String,String>[] allHashmaps) throws IOException {
 
             HttpURLConnection connection = null;
             InputStream is = null;
+            HashMap<String,String> hashmap;
+            int size =allHashmaps.length;
+            for(int i =0; i<size; i++) {
 
-            try {
-                URL get_url = new URL(myurl);
-                connection = (HttpURLConnection) get_url.openConnection();
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.connect();
-                is = new BufferedInputStream(connection.getInputStream());
-                final Bitmap bitmap = BitmapFactory.decodeStream(is);
+                hashmap=allHashmaps[i];
+
+                int numberofSlides = Integer.parseInt(hashmap.get("slideNumber"));
+                for (int j=0; j<numberofSlides; j++) {
+                    String url= hashmap.get("slideSrcUrl"+(j));
+                    String slidename=hashmap.get("slideFileName"+(j));
+                    try {
+                        URL get_url = new URL(url);
+                        connection = (HttpURLConnection) get_url.openConnection();
+                        connection.setDoInput(true);
+                        connection.setDoOutput(true);
+                        connection.connect();
+                        is = new BufferedInputStream(connection.getInputStream());
+                        final Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        saveImageToInternalStorage(bitmap, getApplicationContext(),slidename);
 
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                connection.disconnect();
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        connection.disconnect();
+                        try {
+                            is.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
 
@@ -111,50 +124,31 @@ public class ImageHttpActivity extends Activity {
 
         }
 
-        // Makes sure that the InputStream is closed after the app is
-        // finished using it.
+        public boolean saveImageToInternalStorage(Bitmap image, Context context, String imageName) {
 
+            try {
+                File directoryPath = context.getDir("1", Context.MODE_PRIVATE); //Creating an internal dir;
+                File fileWithinMyDir = new File(directoryPath, imageName);
+// Use the compress method on the Bitmap object to write image to
+// the OutputStream
+                //FileOutputStream fos = context.openFileOutput(imageName, Context.MODE_PRIVATE);
+                FileOutputStream fos = new FileOutputStream(fileWithinMyDir);
+// Writing the bitmap to the output stream
+                image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
 
-
-
-
-        // Reads an InputStream and converts it to a String.
-        public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-
-            Reader reader = null;
-            reader = new InputStreamReader(stream, "UTF-8");
-
-            char[] buffer = new char[len];
-            reader.read(buffer);
-
-            Log.d(DEBUG_TAG,"stream read");
-            return new String(buffer);
+                return true;
+            } catch (Exception e) {
+                Log.e("saveToInternalStorage()", e.getMessage());
+                return false;
+            }
         }
-
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.d(DEBUG_TAG, result);
+         Log.d(DEBUG_TAG, " " +result);
         }
-        public Bitmap loadBitmap(Context context, String picName){
-            Bitmap b = null;
-            FileInputStream fis;
-            try {
-                fis = context.openFileInput(picName);
-                b = BitmapFactory.decodeStream(fis);
-                fis.close();
 
-            }
-            catch (FileNotFoundException e) {
-                Log.d(DEBUG_TAG, "file not found");
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                Log.d(DEBUG_TAG, "io exception");
-                e.printStackTrace();
-            }
-            return b;
-        }
     }
 
 
