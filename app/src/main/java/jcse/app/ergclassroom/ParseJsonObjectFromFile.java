@@ -92,10 +92,10 @@ public class ParseJsonObjectFromFile extends Activity {
                                         for(int l=0; l<lessons.length();l++){
                                             JSONObject lesson=lessons.getJSONObject(l);
                                             if(lesson != null){
-                                                directoryValues.put("termid",termid);
+                                                directoryValues.put("termId",termid);
                                                 directoryValues.put("weekId",weekId);
                                                 String lessonId =lesson.getString("lessonId");
-                                                directoryValues.put("lessonid",lessonId);
+                                                directoryValues.put("lessonId",lessonId);
                                                 JSONArray slides = lesson.getJSONArray("slides");
                                                 if(slides != null){
                                                     int slideNumber=slides.length();
@@ -107,6 +107,7 @@ public class ParseJsonObjectFromFile extends Activity {
                                                             String slideSrcUrl=slide.getString("slideSrcUrl");
                                                             directoryValues.put("slideSrcUrl"+ (s),slideSrcUrl);
                                                             String slideSrcDate=slide.getString("slideSrcDate");
+                                                            directoryValues.put("slideSrcDate"+(s),slideSrcDate);
                                                             String slideFileName=slide.getString("slideFileName");
                                                             directoryValues.put("slideFileName"+(s),slideFileName);
                                                             JSONArray resources = slide.getJSONArray("resources");
@@ -115,10 +116,14 @@ public class ParseJsonObjectFromFile extends Activity {
                                                                     JSONObject oneResource=resources.getJSONObject(r);
                                                                     if(oneResource != null){
                                                                         String type = oneResource.getString("type");
+                                                                        String resourceId = oneResource.getString("resourceId");
                                                                         String resourceSrcUrl = oneResource.getString("resourceSrcUrl");
                                                                         String resourceSrcDate = oneResource.getString("resourceSrcDate");
                                                                         String resourceRefName = oneResource.getString("resourceRefName");
-
+                                                                        directoryValues.put("type"+resourceId,type);
+                                                                        directoryValues.put("resourceSrcUrl"+resourceId,resourceSrcUrl);
+                                                                        directoryValues.put("resourceRefName"+resourceId,resourceRefName);
+                                                                        directoryValues.put("resourceSrcDate"+resourceId,resourceSrcDate);
                                                                     }
                                                                 }
 

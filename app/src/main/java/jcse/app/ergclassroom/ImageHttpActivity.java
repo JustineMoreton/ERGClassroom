@@ -40,6 +40,7 @@ public class ImageHttpActivity extends Activity {
         arrayofHashMaps = (HashMap<String, String>[]) directoryValue.toArray(new HashMap[directoryValue.size()]);
 
         getURl(arrayofHashMaps);
+        //start resource activity, pass arrayList in intent
         finish();
     }
 
@@ -89,11 +90,17 @@ public class ImageHttpActivity extends Activity {
             for(int i =0; i<size; i++) {
 
                 hashmap=allHashmaps[i];
-
+                String termId = hashmap.get("termId");
+                String weekId = hashmap.get("weekId");
+                String lessonId = hashmap.get("lessonId");
                 int numberofSlides = Integer.parseInt(hashmap.get("slideNumber"));
                 for (int j=0; j<numberofSlides; j++) {
                     String url= hashmap.get("slideSrcUrl"+(j));
-                    String slidename=hashmap.get("slideFileName"+(j));
+                    String hashSlideName= hashmap.get("slideFileName"+(j));
+                    String modDate = hashmap.get("slideSrcDate"+(j));
+                    String slidename=termId+"_"+weekId+"_"+lessonId+"_"+hashSlideName;
+
+
                     try {
                         URL get_url = new URL(url);
                         connection = (HttpURLConnection) get_url.openConnection();
@@ -102,7 +109,7 @@ public class ImageHttpActivity extends Activity {
                         connection.connect();
                         is = new BufferedInputStream(connection.getInputStream());
                         final Bitmap bitmap = BitmapFactory.decodeStream(is);
-                        saveImageToInternalStorage(bitmap, getApplicationContext(),slidename);
+                        saveImageToInternalStorage(bitmap, getApplicationContext(),slidename,modDate);
 
 
                     } catch (MalformedURLException e) {
@@ -124,24 +131,49 @@ public class ImageHttpActivity extends Activity {
 
         }
 
-        public boolean saveImageToInternalStorage(Bitmap image, Context context, String imageName) {
+        public boolean saveImageToInternalStorage(Bitmap image, Context context, String imageName, String modDate) {
+            Long lastModified=null;
+            Long now=null;
+            File checkFile = new File(getFilesDir(),imageName);
+            if(checkFile.exists()) {
+                lastModified = checkFile.lastModified();
+                now = Long.parseLong(modDate);
+                if (lastModified != now) {
+                    try {
+//******Replace file with modifed file***/
 
-            try {
-                File directoryPath = context.getDir("1", Context.MODE_PRIVATE); //Creating an internal dir;
-                File fileWithinMyDir = new File(directoryPath, imageName);
+                        //FileOutputStream fos = context.openFileOutput(imageName, Context.MODE_PRIVATE);
 // Use the compress method on the Bitmap object to write image to
 // the OutputStream
-                //FileOutputStream fos = context.openFileOutput(imageName, Context.MODE_PRIVATE);
-                FileOutputStream fos = new FileOutputStream(fileWithinMyDir);
 // Writing the bitmap to the output stream
-                image.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.close();
+                        //image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                       // fos.close();
 
-                return true;
-            } catch (Exception e) {
-                Log.e("saveToInternalStorage()", e.getMessage());
-                return false;
+                        return true;
+                    } catch (Exception e) {
+                        Log.e("saveToInternalStorage()", e.getMessage());
+                        return false;
+                    }
+                }else{return true;}//file exists and has the same modified date
+            }else{
+                try {
+
+//******Create new file***/
+                    FileOutputStream fos = context.openFileOutput(imageName, Context.MODE_PRIVATE);
+// Use the compress method on the Bitmap object to write image to
+// the OutputStream
+// Writing the bitmap to the output stream
+                    image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+
+                    return true;
+                } catch (Exception e) {
+                    Log.e("saveToInternalStorage()", e.getMessage());
+                    return false;
+                }
             }
+
+
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
