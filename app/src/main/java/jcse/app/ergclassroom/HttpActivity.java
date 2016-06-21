@@ -37,7 +37,7 @@ public class HttpActivity extends Activity {
     // Before attempting to fetch the URL, makes sure that there is a network connection.
     public void getURl() {
         // Gets the URL from the UI's text field.
-        String stringUrl ="http://www.json-generator.com/api/json/get/bZAsQLulCG?indent=2";
+        String stringUrl ="http://www.json-generator.com/api/json/get/coYcYAkLnm?indent=2";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -124,14 +124,16 @@ public class HttpActivity extends Activity {
             try {
                 JSONObject object = new JSONObject(result);
 
-                JSONArray jsonMessage = object.getJSONArray("lessonStructure");
+                JSONArray userArray = object.getJSONArray("users");
+                String usersString ="{\"users\":"+userArray.toString()+"}";
+                JSONArray lessonArray =object.getJSONArray("lessonStructure");
+                String lessonString ="{\"lessonStructure\":"+lessonArray.toString()+"}";
 
-                for(int i =0; i< jsonMessage.length();i++){
-                    Log.d(DEBUG_TAG,jsonMessage.getString(i));
-               }
                SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
-                saveJsonToFile.createJsonFile(getApplicationContext(),result,"lessonStructure.txt");
+                saveJsonToFile.createJsonFile(getApplicationContext(),lessonString,"lessonStructure.txt");
+                saveJsonToFile.createJsonFile(getApplicationContext(),usersString,"users.txt");
                 Intent intent = new Intent(getApplicationContext(),ParseJsonObjectFromFile.class);
+
                 startActivity(intent);
             }catch (JSONException jsonException){
                 Log.d(DEBUG_TAG, "cant read JSOn object");

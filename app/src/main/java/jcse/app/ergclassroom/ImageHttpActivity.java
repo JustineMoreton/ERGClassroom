@@ -135,19 +135,19 @@ public class ImageHttpActivity extends Activity {
             Long lastModified=null;
             Long now=null;
             File checkFile = new File(getFilesDir(),imageName);
-            if(checkFile.exists()) {
+            if(checkFile.isFile()) {
                 lastModified = checkFile.lastModified();
                 now = Long.parseLong(modDate);
                 if (lastModified != now) {
                     try {
 //******Replace file with modifed file***/
 
-                        //FileOutputStream fos = context.openFileOutput(imageName, Context.MODE_PRIVATE);
+                        FileOutputStream fos = context.openFileOutput(imageName, Context.MODE_PRIVATE);
 // Use the compress method on the Bitmap object to write image to
 // the OutputStream
 // Writing the bitmap to the output stream
-                        //image.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                       // fos.close();
+                        image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                        fos.close();
 
                         return true;
                     } catch (Exception e) {

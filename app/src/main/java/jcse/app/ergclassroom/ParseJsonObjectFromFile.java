@@ -31,6 +31,7 @@ public class ParseJsonObjectFromFile extends Activity {
         String getFileText = readFromFile();
         ArrayList<HashMap<String,String>> directoryValues= createJsonObject((getFileText));
         Intent intent = new Intent(this,ImageHttpActivity.class);
+
         intent.putExtra("directoryValues", directoryValues);
         startActivity(intent);
         finish();
@@ -73,6 +74,7 @@ public class ParseJsonObjectFromFile extends Activity {
             JSONObject jsonObject = new JSONObject(fileText);
 
             JSONArray lessonStructure=jsonObject.getJSONArray("lessonStructure");
+
             if(lessonStructure != null) {
 
                 for (int i = 0; i < lessonStructure.length(); i++) {
@@ -90,6 +92,7 @@ public class ParseJsonObjectFromFile extends Activity {
                                     JSONArray lessons=week.getJSONArray("lessons");
                                     if(lessons != null){
                                         for(int l=0; l<lessons.length();l++){
+
                                             JSONObject lesson=lessons.getJSONObject(l);
                                             if(lesson != null){
                                                 directoryValues.put("termId",termid);
