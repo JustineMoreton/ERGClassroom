@@ -122,12 +122,12 @@
         <activity
             android:name=".HttpActivity">
         </activity>
-        <activity
-            android:name=".ImageHttpActivity">
-        </activity>
-        <activity
-            android:name=".ParseJsonObjectFromFile">
-        </activity>
+        <service
+            android:name="jcse.app.ergclassroom.ImageHttpActivity">
+        </service>
+        <service
+            android:name="jcse.app.ergclassroom.ParseJsonObjectFromFile">
+        </service>
     </application>
 
 </manifest>

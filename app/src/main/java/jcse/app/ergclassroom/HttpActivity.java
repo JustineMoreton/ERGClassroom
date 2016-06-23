@@ -1,8 +1,10 @@
 package jcse.app.ergclassroom;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -20,19 +22,71 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Justine on 2016/06/06.
  */
 public class HttpActivity extends Activity {
     private static final String DEBUG_TAG = "HttpActivity";
-
+    private ResponseReceiver receiver;
+    private ImageResponseReceiver imageResponseReceiver;
+    ArrayList<HashMap<String,String>> directoryValues;
+    String imagessent;
+    Boolean parseStatus=false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getURl();
+        //Intent intent = new Intent(getApplicationContext(),ParseJsonObjectFromFile.class);
+        //startService(intent);
+
+        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        registerReceiver(receiver, filter);
+
+        startJsonService();
+    while(parseStatus==false){
+        try {
+            wait(2000);
+        }catch (InterruptedException ie){
+            Log.e("httpActivity",ie.getMessage());
+        }
+
+    }
+        IntentFilter intentFilter = new IntentFilter(ImageResponseReceiver.ACTION_RESP);
+        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        imageResponseReceiver = new ImageResponseReceiver();
+        registerReceiver(imageResponseReceiver, intentFilter);
+        unregisterReceiver(receiver);
+        unregisterReceiver(imageResponseReceiver);
+        startImageService();
+
+
+
+     //
          finish();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    public void startJsonService() {
+        startService(new Intent(getBaseContext(), ParseJsonObjectFromFile.class));
+
+    }
+    public void startImageService(){
+        Intent intent =new Intent(this,ImageHttpActivity.class);
+        intent.putExtra("directoryValues",directoryValues);
+        startService(intent);
+
+    }
+
     // When user clicks button, calls AsyncTask.
     // Before attempting to fetch the URL, makes sure that there is a network connection.
     public void getURl() {
@@ -132,17 +186,46 @@ public class HttpActivity extends Activity {
                SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
                 saveJsonToFile.createJsonFile(getApplicationContext(),lessonString,"lessonStructure.txt");
                 saveJsonToFile.createJsonFile(getApplicationContext(),usersString,"users.txt");
-                Intent intent = new Intent(getApplicationContext(),ParseJsonObjectFromFile.class);
 
-                startActivity(intent);
             }catch (JSONException jsonException){
                 Log.d(DEBUG_TAG, "cant read JSOn object");
             }
         }
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+            if (resultCode == RESULT_OK) {
+Log.d(DEBUG_TAG,"inActivityResult");
+            }
+
+    }
+    public class ResponseReceiver extends BroadcastReceiver {
+
+        public static final String ACTION_RESP =
+                "jcse.app.ergclassroom.BroadCastReceiver";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            directoryValues=
+                    (ArrayList<HashMap<String, String>>)intent.getSerializableExtra("directoryValues");
+            parseStatus=intent.getBooleanExtra("finishedParse",false);
 
 
+        }
+    }
+    public class ImageResponseReceiver extends BroadcastReceiver {
+
+        public static final String ACTION_RESP =
+                "jcse.app.ergclassroom.BroadCastReceiver";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            imagessent=intent.getStringExtra("imageResponse");
+
+        }
+    }
 
     }
 

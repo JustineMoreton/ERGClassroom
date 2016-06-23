@@ -1,14 +1,17 @@
 package jcse.app.ergclassroom;
 
-import android.app.Activity;
+import android.app.IntentService;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -24,24 +27,58 @@ import java.util.HashMap;
 /**
  * Created by Justine on 2016/06/07.
  */
-public class ImageHttpActivity extends Activity {
+public class ImageHttpActivity extends IntentService{
     private static final String DEBUG_TAG = "IMAGEHttpActivity";
-
-
     ArrayList<HashMap<String, String>> directoryValue = new ArrayList<HashMap<String, String>>();
 
     HashMap<String, String>[] arrayofHashMaps;
+    public ImageHttpActivity(){
+        super("ImageHttpActivity");
+    }
+
+    public ImageHttpActivity(String name, ArrayList<HashMap<String, String>> directoryValue) {
+        super(name);
+        this.directoryValue = directoryValue;
+    }
+
+    public IBinder onBind(Intent arg0) {
+        return null;
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        directoryValue = (ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("directoryValues");
+    protected void onHandleIntent(Intent intent) {
+        Log.d(DEBUG_TAG,"image handle intent");
+        Toast.makeText(this, "service IMAGE starting", Toast.LENGTH_SHORT).show();
+        directoryValue = (ArrayList<HashMap<String, String>>) intent.getSerializableExtra("directoryValues");
 
         arrayofHashMaps = (HashMap<String, String>[]) directoryValue.toArray(new HashMap[directoryValue.size()]);
 
         getURl(arrayofHashMaps);
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(HttpActivity.ImageResponseReceiver.ACTION_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra("imageResponse","sent to Image receiver");
+        sendBroadcast(broadcastIntent);
+
+    }
+
+
+
+
+    public void onCreate(Bundle savedInstanceState) {
+        //super.onCreate(savedInstanceState);
+Log.d(DEBUG_TAG,"image on create");
+
         //start resource activity, pass arrayList in intent
-        finish();
+        //finish();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Toast.makeText(this, "service IMAGE FIN", Toast.LENGTH_SHORT).show();
     }
 
     // When user clicks button, calls AsyncTask.

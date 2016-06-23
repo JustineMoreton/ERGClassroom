@@ -1,9 +1,10 @@
 package jcse.app.ergclassroom;
 
-import android.app.Activity;
+import android.app.IntentService;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,21 +21,46 @@ import java.util.HashMap;
 /**
  * Created by Justine on 2016/06/09.
  */
-public class ParseJsonObjectFromFile extends Activity {
+public class ParseJsonObjectFromFile extends IntentService{
+    private static final String DEBUG_TAG = "ParseJsonObject";
+    int mStartMode;
+    String getFileText;
+    ArrayList<HashMap<String,String>> directoryValues;
+
     public ParseJsonObjectFromFile() {
+        super("ParseJsonObjectFromFile");
     }
 
-    private static final String DEBUG_TAG = "ParseJsonObject";
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        String getFileText = readFromFile();
-        ArrayList<HashMap<String,String>> directoryValues= createJsonObject((getFileText));
-        Intent intent = new Intent(this,ImageHttpActivity.class);
+    public IBinder onBind(Intent arg0) {
+        return null;
+    }
 
-        intent.putExtra("directoryValues", directoryValues);
-        startActivity(intent);
-        finish();
+    @Override
+    protected void onHandleIntent(Intent intent) {
+
+        Toast.makeText(this, "service JSON starting", Toast.LENGTH_SHORT).show();
+        getFileText= readFromFile();
+        directoryValues= createJsonObject((getFileText));
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(HttpActivity.ResponseReceiver.ACTION_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra("directoryValues",directoryValues);
+        broadcastIntent.putExtra("finishedParse",true);
+        sendBroadcast(broadcastIntent);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(DEBUG_TAG, "Json ON HANDLE INTENT");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(this, "JSON object Parsed", Toast.LENGTH_LONG).show();
     }
 
     private String readFromFile() {
