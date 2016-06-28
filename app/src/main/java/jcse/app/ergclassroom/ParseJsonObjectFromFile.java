@@ -1,6 +1,7 @@
 package jcse.app.ergclassroom;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -47,7 +48,14 @@ public class ParseJsonObjectFromFile extends IntentService{
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra("directoryValues",directoryValues);
         broadcastIntent.putExtra("finishedParse",true);
-        sendBroadcast(broadcastIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        try {
+            // Perform the operation associated with our pendingIntent
+            pendingIntent.send();
+        } catch (PendingIntent.CanceledException e) {
+            e.printStackTrace();
+        }
+        HttpActivity.ResponseReceiver.completeWakefulIntent(intent);
     }
 
     @Override
@@ -96,6 +104,11 @@ public class ParseJsonObjectFromFile extends IntentService{
     public ArrayList createJsonObject(String fileText){
         ArrayList<HashMap<String, String>> arrayList = new ArrayList<HashMap<String,String>>();
         HashMap<String,String> directoryValues = new HashMap<String,String>();
+        HashMap<String,String> mapTerm = new HashMap<String,String>();
+        HashMap<String,String> mapWeek = new HashMap<String,String>();
+        HashMap<String,String> mapLesson = new HashMap<String,String>();
+        HashMap<String,String> mapSlide = new HashMap<String,String>();
+        HashMap<String,String> mapResources = new HashMap<String,String>();
         try {
             JSONObject jsonObject = new JSONObject(fileText);
 

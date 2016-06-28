@@ -1,6 +1,7 @@
 package jcse.app.ergclassroom;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -58,7 +59,13 @@ public class ImageHttpActivity extends IntentService{
         broadcastIntent.setAction(HttpActivity.ImageResponseReceiver.ACTION_RESP);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra("imageResponse","sent to Image receiver");
-        sendBroadcast(broadcastIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        try {
+            // Perform the operation associated with our pendingIntent
+            pendingIntent.send();
+        } catch (PendingIntent.CanceledException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -119,7 +126,7 @@ Log.d(DEBUG_TAG,"image on create");
 // the web page content as a InputStream, which it returns as
 // a string.
         private String downloadUrl(HashMap<String,String>[] allHashmaps) throws IOException {
-
+            String downloadURlSuccess="no success";
             HttpURLConnection connection = null;
             InputStream is = null;
             HashMap<String,String> hashmap;
@@ -157,6 +164,7 @@ Log.d(DEBUG_TAG,"image on create");
                         connection.disconnect();
                         try {
                             is.close();
+                            downloadURlSuccess="url download success";
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -164,7 +172,7 @@ Log.d(DEBUG_TAG,"image on create");
                 }
             }
 
-            return null;
+            return downloadURlSuccess;
 
         }
 

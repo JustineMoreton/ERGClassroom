@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -48,32 +49,32 @@ public class HttpActivity extends Activity {
         registerReceiver(receiver, filter);
 
         startJsonService();
-    while(parseStatus==false){
-        try {
-            wait(2000);
-        }catch (InterruptedException ie){
-            Log.e("httpActivity",ie.getMessage());
-        }
 
-    }
+
+
         IntentFilter intentFilter = new IntentFilter(ImageResponseReceiver.ACTION_RESP);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         imageResponseReceiver = new ImageResponseReceiver();
         registerReceiver(imageResponseReceiver, intentFilter);
-        unregisterReceiver(receiver);
-        unregisterReceiver(imageResponseReceiver);
-        startImageService();
-
-
-
-     //
+        Intent sendIntent =getIntent();
+        sendIntent.putExtra("imagesent",imagessent);
+        setResult(Activity.RESULT_OK,sendIntent);
          finish();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(this.receiver);
+        unregisterReceiver(this.imageResponseReceiver);
 
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        unregisterReceiver(this.receiver);
+        unregisterReceiver(this.imageResponseReceiver);
     }
 
     public void startJsonService() {
@@ -83,7 +84,7 @@ public class HttpActivity extends Activity {
     public void startImageService(){
         Intent intent =new Intent(this,ImageHttpActivity.class);
         intent.putExtra("directoryValues",directoryValues);
-        startService(intent);
+        getApplicationContext().startService(intent);
 
     }
 
@@ -91,7 +92,7 @@ public class HttpActivity extends Activity {
     // Before attempting to fetch the URL, makes sure that there is a network connection.
     public void getURl() {
         // Gets the URL from the UI's text field.
-        String stringUrl ="http://www.json-generator.com/api/json/get/coYcYAkLnm?indent=2";
+        String stringUrl ="http://www.json-generator.com/api/json/get/bPXwFggbtu?indent=2";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -193,15 +194,8 @@ public class HttpActivity extends Activity {
         }
 
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-            if (resultCode == RESULT_OK) {
-Log.d(DEBUG_TAG,"inActivityResult");
-            }
-
-    }
-    public class ResponseReceiver extends BroadcastReceiver {
+    public class ResponseReceiver extends WakefulBroadcastReceiver{
 
         public static final String ACTION_RESP =
                 "jcse.app.ergclassroom.BroadCastReceiver";
@@ -211,6 +205,11 @@ Log.d(DEBUG_TAG,"inActivityResult");
             directoryValues=
                     (ArrayList<HashMap<String, String>>)intent.getSerializableExtra("directoryValues");
             parseStatus=intent.getBooleanExtra("finishedParse",false);
+            Intent service = new Intent(context,ImageHttpActivity.class);
+            service.putExtra("directoryValues",directoryValues);
+            if(parseStatus==true){
+              startWakefulService(context,service);
+            }
 
 
         }
@@ -218,7 +217,7 @@ Log.d(DEBUG_TAG,"inActivityResult");
     public class ImageResponseReceiver extends BroadcastReceiver {
 
         public static final String ACTION_RESP =
-                "jcse.app.ergclassroom.BroadCastReceiver";
+                "jcse.app.ergclassroom.ImageBroadCastReceiver";
 
         @Override
         public void onReceive(Context context, Intent intent) {

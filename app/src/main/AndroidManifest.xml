@@ -3,6 +3,7 @@
     package="jcse.app.ergclassroom">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/classimage2"
@@ -128,6 +129,16 @@
         <service
             android:name="jcse.app.ergclassroom.ParseJsonObjectFromFile">
         </service>
+        <receiver android:name=".HttpActivity$ResponseReceiver">
+<intent-filter>
+    <action android:name="jcse.app.ergclassroom.HttpActivity.BroadcastReceiver"></action>
+</intent-filter>
+        </receiver>
+        <receiver android:name=".HttpActivity$ImageResponseReceiver">
+            <intent-filter>
+                <action android:name="jcse.app.ergclassroom.HttpActivity.WakefulBroadcastReceiver"></action>
+            </intent-filter>
+            </receiver>
     </application>
 
 </manifest>

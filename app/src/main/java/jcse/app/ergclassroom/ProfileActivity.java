@@ -24,7 +24,7 @@ private final String DEBUG_TAG="";
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try {
-            File file = new File(getFilesDir(),"1_1_1_slide1.png");
+            File file = new File(getFilesDir(),"1_1_2_slide1.png");
             Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
             ImageView img = (ImageView) findViewById(R.id.imageView);
             img.setImageBitmap(bitmap);
