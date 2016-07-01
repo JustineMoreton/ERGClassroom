@@ -3,12 +3,13 @@ package jcse.app.ergclassroom;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.ImageView;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,15 +24,22 @@ private final String DEBUG_TAG="";
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        try {
-            File file = new File(getFilesDir(),"1_1_2_slide1.png");
+        /*try {
+            File file = new File(getFilesDir(),"bunny.mp4");
             Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
             ImageView img = (ImageView) findViewById(R.id.imageView);
             img.setImageBitmap(bitmap);
+
         }catch (IOException IO){
             //
-        }
-
+        }*/
+        File file = new File(getFilesDir(),"bunny.mp4");
+        VideoView videoView=(VideoView) findViewById(R.id.videoView);
+        Uri videoUri = Uri.parse(file.toString());
+        Log.d("Video Player", file.toString());
+        videoView.setVideoURI(videoUri);
+        videoView.seekTo(0);
+        videoView.start();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 /*        fab.setOnClickListener(new View.OnClickListener() {
             @Override

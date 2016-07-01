@@ -12,9 +12,10 @@
     tools:context="jcse.app.ergclassroom.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
-    <ImageView
-        android:layout_width="match_parent"
+    <VideoView
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/imageView"
-         />
+        android:id="@+id/videoView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

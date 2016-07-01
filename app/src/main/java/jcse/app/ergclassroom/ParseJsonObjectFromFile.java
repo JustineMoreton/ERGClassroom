@@ -103,9 +103,8 @@ public class ParseJsonObjectFromFile extends IntentService{
         }
     public ArrayList createJsonObject(String fileText){
         ArrayList<HashMap<String, String>> arrayList = new ArrayList<HashMap<String,String>>();
-        HashMap<String,String> directoryValues = new HashMap<String,String>();
-        HashMap<String,String> mapTerm = new HashMap<String,String>();
-        HashMap<String,String> mapWeek = new HashMap<String,String>();
+
+
         HashMap<String,String> mapLesson = new HashMap<String,String>();
         HashMap<String,String> mapSlide = new HashMap<String,String>();
         HashMap<String,String> mapResources = new HashMap<String,String>();
@@ -123,36 +122,47 @@ public class ParseJsonObjectFromFile extends IntentService{
                         String startDate = term.getString("startDate");
                         String endDate = term.getString("endDate");
                         JSONArray weeks =term.getJSONArray("weeks");
+                        HashMap<String,String> mapTerm = new HashMap<String,String>();
+                        mapTerm.put("termId",termid);
                         if(weeks!= null){
                             for(int w = 0; w<weeks.length(); w++){
                                 JSONObject week = weeks.getJSONObject(w);
                                 if(week != null){
                                     String weekId = week.getString("weekId");
+                                    String weekName=week.getString("weekName");
+                                    HashMap<String,String> mapWeek = new HashMap<String,String>(mapTerm);
+                                    mapTerm.putAll(mapWeek);
+                                    mapWeek.put("weekId",weekId);
+                                    mapWeek.put("weekName",weekName);
                                     JSONArray lessons=week.getJSONArray("lessons");
                                     if(lessons != null){
                                         for(int l=0; l<lessons.length();l++){
-
+                                            HashMap<String,String> directoryValues = new HashMap<String,String>();
+                                            directoryValues.putAll(mapWeek);
                                             JSONObject lesson=lessons.getJSONObject(l);
                                             if(lesson != null){
-                                                directoryValues.put("termId",termid);
-                                                directoryValues.put("weekId",weekId);
+
                                                 String lessonId =lesson.getString("lessonId");
+                                                String lessonName=lesson.getString("lessonName");
+                                                directoryValues.put("lessonName",lessonName);
                                                 directoryValues.put("lessonId",lessonId);
-                                                JSONArray slides = lesson.getJSONArray("slides");
-                                                if(slides != null){
-                                                    int slideNumber=slides.length();
-                                                    directoryValues.put("slideNumber",""+(slideNumber));
-                                                    for(int s =0; s<slides.length(); s++){
-                                                        JSONObject slide=slides.getJSONObject(s);
-                                                        if(slide != null){
-                                                            String slideId=slide.getString("slideId");
-                                                            String slideSrcUrl=slide.getString("slideSrcUrl");
-                                                            directoryValues.put("slideSrcUrl"+ (s),slideSrcUrl);
-                                                            String slideSrcDate=slide.getString("slideSrcDate");
-                                                            directoryValues.put("slideSrcDate"+(s),slideSrcDate);
-                                                            String slideFileName=slide.getString("slideFileName");
-                                                            directoryValues.put("slideFileName"+(s),slideFileName);
-                                                            JSONArray resources = slide.getJSONArray("resources");
+                                                JSONArray activities = lesson.getJSONArray("activities");
+                                                if(activities != null){
+                                                    int activitiesNumber=activities.length();
+                                                    directoryValues.put("activitiesNumber",""+(activitiesNumber));
+                                                    for(int s =0; s<activities.length(); s++){
+                                                        JSONObject oneActivity=activities.getJSONObject(s);
+                                                        if(oneActivity != null){
+                                                            String activityId=oneActivity.getString("activityId");
+                                                            String activityName=oneActivity.getString("activityName");
+                                                            directoryValues.put("activityName"+ (s),activityName);
+                                                            String activityTime=oneActivity.getString("activityTime");
+                                                            directoryValues.put("activityTime"+(s),activityTime);
+                                                            String outcomes=oneActivity.getString("outcomes");
+                                                            directoryValues.put("outcomes"+(s),outcomes);
+                                                            String description=oneActivity.getString("description");
+                                                            directoryValues.put("description"+(s),description);
+                                                            JSONArray resources = oneActivity.getJSONArray("resources");
                                                             if(resources != null){
                                                                 for(int r =0; r<resources.length(); r++){
                                                                     JSONObject oneResource=resources.getJSONObject(r);
@@ -162,10 +172,10 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                                         String resourceSrcUrl = oneResource.getString("resourceSrcUrl");
                                                                         String resourceSrcDate = oneResource.getString("resourceSrcDate");
                                                                         String resourceRefName = oneResource.getString("resourceRefName");
-                                                                        directoryValues.put("type"+resourceId,type);
-                                                                        directoryValues.put("resourceSrcUrl"+resourceId,resourceSrcUrl);
-                                                                        directoryValues.put("resourceRefName"+resourceId,resourceRefName);
-                                                                        directoryValues.put("resourceSrcDate"+resourceId,resourceSrcDate);
+                                                                        directoryValues.put("type"+(r),type);
+                                                                        directoryValues.put("resourceSrcUrl"+(r),resourceSrcUrl);
+                                                                        directoryValues.put("resourceRefName"+(r),resourceRefName);
+                                                                        directoryValues.put("resourceSrcDate"+(r),resourceSrcDate);
                                                                     }
                                                                 }
 
@@ -190,7 +200,7 @@ public class ParseJsonObjectFromFile extends IntentService{
             }
 
         }catch (JSONException jsonException){
-            Log.d(DEBUG_TAG, "Json Exception");
+            Log.d(DEBUG_TAG, jsonException.getMessage());
         }
         return arrayList;
     }

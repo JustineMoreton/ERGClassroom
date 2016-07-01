@@ -137,12 +137,13 @@ Log.d(DEBUG_TAG,"image on create");
                 String termId = hashmap.get("termId");
                 String weekId = hashmap.get("weekId");
                 String lessonId = hashmap.get("lessonId");
-                int numberofSlides = Integer.parseInt(hashmap.get("slideNumber"));
-                for (int j=0; j<numberofSlides; j++) {
-                    String url= hashmap.get("slideSrcUrl"+(j));
-                    String hashSlideName= hashmap.get("slideFileName"+(j));
-                    String modDate = hashmap.get("slideSrcDate"+(j));
-                    String slidename=termId+"_"+weekId+"_"+lessonId+"_"+hashSlideName;
+                int numberofActivities = Integer.parseInt(hashmap.get("activitiesNumber"));
+                for (int j=0; j<numberofActivities; j++) {
+                    String url= hashmap.get("resourceSrcUrl"+(j));
+                    String hashSlideName= hashmap.get("resourceRefName"+(j));
+                    String modDate = hashmap.get("resourceSrcDate"+(j));
+                    String type=hashmap.get("type"+(j));
+                    String slidename=hashSlideName;
 
 
                     try {
@@ -152,8 +153,22 @@ Log.d(DEBUG_TAG,"image on create");
                         connection.setDoOutput(true);
                         connection.connect();
                         is = new BufferedInputStream(connection.getInputStream());
-                        final Bitmap bitmap = BitmapFactory.decodeStream(is);
-                        saveImageToInternalStorage(bitmap, getApplicationContext(),slidename,modDate);
+                        if(type.equals("image")) {
+                            final Bitmap bitmap = BitmapFactory.decodeStream(is);
+                            saveImageToInternalStorage(bitmap, getApplicationContext(), slidename, modDate);
+                        }
+                        else if(type.equals("video")){
+                            saveVideoToInternalStorage(is,getApplicationContext(),slidename,modDate);
+
+                        }
+                        else if(type.equals("pdf")){
+                            saveVideoToInternalStorage(is,getApplicationContext(),slidename,modDate);
+
+                        }
+                        else if(type.equals("audio")){
+                            saveVideoToInternalStorage(is,getApplicationContext(),slidename,modDate);
+
+                        }
 
 
                     } catch (MalformedURLException e) {
@@ -209,6 +224,56 @@ Log.d(DEBUG_TAG,"image on create");
 // the OutputStream
 // Writing the bitmap to the output stream
                     image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+
+                    return true;
+                } catch (Exception e) {
+                    Log.e("saveToInternalStorage()", e.getMessage());
+                    return false;
+                }
+            }
+
+
+        }
+        public boolean saveVideoToInternalStorage(InputStream is, Context context, String videoName, String modDate) {
+            Long lastModified=null;
+            Long now=null;
+
+            File checkFile = new File(getFilesDir(),videoName);
+            if(checkFile.isFile()) {
+                lastModified = checkFile.lastModified();
+                now = Long.parseLong(modDate);
+                if (lastModified != now) {
+                    try {
+//******Replace file with modifed file***/
+
+                        FileOutputStream fos = context.openFileOutput(videoName, Context.MODE_WORLD_READABLE);
+// Use the compress method on the Bitmap object to write image to
+// the OutputStream
+// Writing the bitmap to the output stream
+
+                        byte[] buffer = new byte[1024];
+                        int len1 = 0;
+                        while ((len1 = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, len1);
+                        }
+                        fos.close();
+                        return true;
+                    } catch (Exception e) {
+                        Log.e("saveToInternalStorage()", e.getMessage());
+                        return false;
+                    }
+                }else{return true;}//file exists and has the same modified date
+            }else{
+                try {
+
+//******Create new file***/
+                    FileOutputStream fos = context.openFileOutput(videoName, Context.MODE_WORLD_READABLE);
+                    byte[] buffer = new byte[1024];
+                    int len1 = 0;
+                    while ((len1 = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, len1);
+                    }
                     fos.close();
 
                     return true;
