@@ -146,23 +146,21 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                 String lessonName=lesson.getString("lessonName");
                                                 directoryValues.put("lessonName",lessonName);
                                                 directoryValues.put("lessonId",lessonId);
-                                                JSONArray activities = lesson.getJSONArray("activities");
-                                                if(activities != null){
-                                                    int activitiesNumber=activities.length();
-                                                    directoryValues.put("activitiesNumber",""+(activitiesNumber));
-                                                    for(int s =0; s<activities.length(); s++){
-                                                        JSONObject oneActivity=activities.getJSONObject(s);
-                                                        if(oneActivity != null){
-                                                            String activityId=oneActivity.getString("activityId");
-                                                            String activityName=oneActivity.getString("activityName");
-                                                            directoryValues.put("activityName"+ (s),activityName);
-                                                            String activityTime=oneActivity.getString("activityTime");
-                                                            directoryValues.put("activityTime"+(s),activityTime);
-                                                            String outcomes=oneActivity.getString("outcomes");
-                                                            directoryValues.put("outcomes"+(s),outcomes);
-                                                            String description=oneActivity.getString("description");
-                                                            directoryValues.put("description"+(s),description);
-                                                            JSONArray resources = oneActivity.getJSONArray("resources");
+                                                JSONArray slides = lesson.getJSONArray("slides");
+                                                if(slides != null){
+                                                    int slideNumber=slides.length();
+                                                    directoryValues.put("slideNumber",""+(slideNumber));
+                                                    for(int s =0; s<slides.length(); s++){
+                                                        JSONObject slide=slides.getJSONObject(s);
+                                                        if(slide != null){
+                                                            String slideId=slide.getString("slideId");
+                                                            String slideSrcUrl=slide.getString("slideSrcUrl");
+                                                            directoryValues.put("slideSrcUrl"+ (s),slideSrcUrl);
+                                                            String slideSrcDate=slide.getString("slideSrcDate");
+                                                            directoryValues.put("slideSrcDate"+(s),slideSrcDate);
+                                                            String slideFileName=slide.getString("slideFileName");
+                                                            directoryValues.put("slideFileName"+(s),slideFileName);
+                                                            JSONArray resources = slide.getJSONArray("resources");
                                                             if(resources != null){
                                                                 for(int r =0; r<resources.length(); r++){
                                                                     JSONObject oneResource=resources.getJSONObject(r);

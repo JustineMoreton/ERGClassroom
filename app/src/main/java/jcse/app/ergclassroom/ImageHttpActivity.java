@@ -137,7 +137,7 @@ Log.d(DEBUG_TAG,"image on create");
                 String termId = hashmap.get("termId");
                 String weekId = hashmap.get("weekId");
                 String lessonId = hashmap.get("lessonId");
-                int numberofActivities = Integer.parseInt(hashmap.get("activitiesNumber"));
+                int numberofActivities = Integer.parseInt(hashmap.get("slideNumber"));
                 for (int j=0; j<numberofActivities; j++) {
                     String url= hashmap.get("resourceSrcUrl"+(j));
                     String hashSlideName= hashmap.get("resourceRefName"+(j));

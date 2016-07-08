@@ -20,4 +20,6 @@
     <string name="title_activity_preparation_item"></string>
     <string name="title_activity_preparation_items"></string>
     <string name="title_activity_preparation_list">PreparationListActivity</string>
+    <string name="title_activity_week">WeekActivity</string>
+    <string name="title_activity_day">DayActivity</string>
 </resources>

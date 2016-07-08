@@ -39,7 +39,7 @@ public class NavigateActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void profile(View view){
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, TermActivity.class);
         startActivity(intent);
     }
     public void tabbed(View view){
