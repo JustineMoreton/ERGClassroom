@@ -12,18 +12,15 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TabbedActivity extends AppCompatActivity {
@@ -57,16 +54,36 @@ public class TabbedActivity extends AppCompatActivity {
      */
     private GoogleApiClient client;
     static int[] arrayname;
-
+    HashMap<String,String> hashMap;
+    static String[] slideNameArray;
+    String slideName;
+    int slideNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_tabbed);
+        Intent intent=getIntent();
+        final int termId =intent.getIntExtra("termId",0);
+        final int weekId= intent.getIntExtra("weekId",0);
+        final int lessonId= intent.getIntExtra("lessonId",0);
         int flag = getIntent().getFlags();
+        GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
+        String textFile=getLessonFromJson.readFromFile();
+        ArrayList<HashMap<String,String>> arrayList=getLessonFromJson.getSlidesAndResourcesForLesson(textFile,termId,weekId,lessonId);
+            hashMap=arrayList.get(0);
+            slideNumber=Integer.parseInt(hashMap.get("slideNumber"));
+            slideNameArray = new String[slideNumber];
 
-            map = (HashMap<String, int[]>) getIntent().getSerializableExtra("maparray");
-            arrayname = map.get("notelist");
+        for(int i=0; i<arrayList.size(); i++){
+
+            hashMap=arrayList.get(i);
+            slideName=hashMap.get("slideFileName"+(i));
+            slideNameArray[i]=termId+"_"+weekId+"_"+lessonId+"_"+slideName;
+
+        }
+          //  map = (HashMap<String, int[]>) getIntent().getSerializableExtra("maparray");
+          //  arrayname = map.get("notelist");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -173,44 +190,6 @@ public class TabbedActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            ImageView imageView = (ImageView) rootView.findViewById(R.id.tabbedImageView);
-            imageView.setImageResource(arrayname[(getArguments().getInt(ARG_SECTION_NUMBER)) - 1]);
-            return rootView;
-        }
-    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -225,14 +204,15 @@ public class TabbedActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position + 1,slideNameArray);
         }
+
 
         @Override
         public int getCount() {
             //return (count)number of pages from the database based on lesson number
             // Show 3 total pages.
-            return arrayname.length;
+            return slideNameArray.length;
         }
 
         @Override
@@ -248,4 +228,11 @@ public class TabbedActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+
+
+
 }

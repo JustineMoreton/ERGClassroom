@@ -141,7 +141,7 @@ public class GetLessonFromJson{
         }
         return arrayList;
     }
-    public ArrayList getLessonActivities(String fileText, int mTermId, int mWeekId){
+    public ArrayList getLessonsForDay(String fileText, int mTermId, int mWeekId){
         ArrayList<HashMap<String, String>> arrayList = new ArrayList<HashMap<String,String>>();
 
 
@@ -211,4 +211,113 @@ public class GetLessonFromJson{
         }
         return arrayList;
     }
+     public ArrayList getSlidesAndResourcesForLesson(String fileText, int mTermId, int mWeekId, int mLessonId){
+         ArrayList<HashMap<String, String>> arrayList = new ArrayList<HashMap<String,String>>();
+
+
+         HashMap<String,String> mapLesson = new HashMap<String,String>();
+         HashMap<String,String> mapSlide = new HashMap<String,String>();
+         HashMap<String,String> mapResources = new HashMap<String,String>();
+         try {
+             JSONObject jsonObject = new JSONObject(fileText);
+
+             JSONArray lessonStructure=jsonObject.getJSONArray("lessonStructure");
+
+             if(lessonStructure != null) {
+
+                 for (int i = 0; i < lessonStructure.length(); i++) {
+                     JSONObject term = lessonStructure.getJSONObject(i);
+                     if(term != null){
+                         String termid = term.getString("termId");
+                         if(Integer.parseInt(termid)==mTermId){
+                             JSONArray weeks =term.getJSONArray("weeks");
+                             HashMap<String,String> mapTerm = new HashMap<String,String>();
+                             mapTerm.put("termId",termid);
+                             if(weeks!= null) {
+
+                                 for (int w = 0; w < weeks.length(); w++) {
+                                     JSONObject week = weeks.getJSONObject(w);
+                                     if (week != null) {
+                                         String weekId = week.getString("weekId");
+                                         if(Integer.parseInt(weekId)==mWeekId){
+                                             String weekName = week.getString("weekName");
+                                             HashMap<String, String> mapWeek = new HashMap<String, String>(mapTerm);
+                                             mapTerm.putAll(mapWeek);
+                                             mapWeek.put("weekId", weekId);
+                                             mapWeek.put("weekName", weekName);
+                                             JSONArray lessons = week.getJSONArray("lessons");
+                                             if (lessons != null) {
+                                                 for (int l = 0; l < lessons.length(); l++) {
+                                                     HashMap<String, String> directoryValues = new HashMap<String, String>();
+                                                     directoryValues.putAll(mapWeek);
+                                                     JSONObject lesson = lessons.getJSONObject(l);
+                                                     if (lesson != null) {
+                                                         String lessonId = lesson.getString("lessonId");
+                                                         if(Integer.parseInt(lessonId)==mLessonId){
+                                                             l=lessons.length();
+                                                         String lessonName = lesson.getString("lessonName");
+                                                         directoryValues.put("lessonName", lessonName);
+                                                         directoryValues.put("lessonId", lessonId);
+                                                         JSONArray slides = lesson.getJSONArray("slides");
+                                                         if (slides != null) {
+                                                             int slideNumber = slides.length();
+                                                             directoryValues.put("slideNumber", "" + (slideNumber));
+                                                             for (int s = 0; s < slides.length(); s++) {
+                                                                 JSONObject slide = slides.getJSONObject(s);
+                                                                 if (slide != null) {
+                                                                     String slideId = slide.getString("slideId");
+                                                                     String slideSrcUrl = slide.getString("slideSrcUrl");
+                                                                     directoryValues.put("slideSrcUrl" + (s), slideSrcUrl);
+                                                                     String slideSrcDate = slide.getString("slideSrcDate");
+                                                                     directoryValues.put("slideSrcDate" + (s), slideSrcDate);
+                                                                     String slideFileName = slide.getString("slideFileName");
+                                                                     directoryValues.put("slideFileName" + (s), slideFileName);
+                                                                     JSONArray resources = slide.getJSONArray("resources");
+                                                                     if (resources != null) {
+                                                                         for (int r = 0; r < resources.length(); r++) {
+                                                                             JSONObject oneResource = resources.getJSONObject(r);
+                                                                             if (oneResource != null) {
+                                                                                 String type = oneResource.getString("type");
+                                                                                 String resourceId = oneResource.getString("resourceId");
+                                                                                 String resourceSrcUrl = oneResource.getString("resourceSrcUrl");
+                                                                                 String resourceSrcDate = oneResource.getString("resourceSrcDate");
+                                                                                 String resourceRefName = oneResource.getString("resourceRefName");
+                                                                                 directoryValues.put("type" + (r), type);
+                                                                                 directoryValues.put("resourceSrcUrl" + (r), resourceSrcUrl);
+                                                                                 directoryValues.put("resourceRefName" + (r), resourceRefName);
+                                                                                 directoryValues.put("resourceSrcDate" + (r), resourceSrcDate);
+                                                                             }
+                                                                         }
+
+                                                                     }
+                                                                 }
+                                                             }
+
+                                                         }
+
+                                                     }
+                                                 }
+                                                     arrayList.add(directoryValues);
+                                                 }
+
+
+                                             }
+
+                                         }
+                                     }
+
+                                 }
+
+                             }
+                         }
+                     }
+                 }
+
+             }
+
+         }catch (JSONException jsonException){
+             Log.d(DEBUG_TAG, jsonException.getMessage());
+         }
+         return arrayList;
+     }
 }

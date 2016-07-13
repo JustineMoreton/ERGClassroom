@@ -31,7 +31,7 @@ public class WeekActivity extends AppCompatActivity {
             HashMap<String,String> hashMap;
             hashMap=weekList.get(i);
             Button button= new Button(this);
-            final int Id =Integer.parseInt(hashMap.get("weekId"));
+            final int weekId =Integer.parseInt(hashMap.get("weekId"));
             button.setText(hashMap.get("weekName"));
             LinearLayout linearLayout=(LinearLayout)findViewById(R.id.content_week);
             Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -41,7 +41,7 @@ public class WeekActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DayActivity.class);
                     intent.putExtra("termId",termId);
-                    intent.putExtra("weekId",Id);
+                    intent.putExtra("weekId",weekId);
                     startActivity(intent);
                 }
             });

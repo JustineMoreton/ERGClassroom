@@ -162,6 +162,8 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                             directoryValues.put("slideFileName"+(s),slideFileName);
                                                             JSONArray resources = slide.getJSONArray("resources");
                                                             if(resources != null){
+                                                                int resourceNumber=resources.length();
+                                                                directoryValues.put("resourceNumber",""+(resourceNumber));
                                                                 for(int r =0; r<resources.length(); r++){
                                                                     JSONObject oneResource=resources.getJSONObject(r);
                                                                     if(oneResource != null){

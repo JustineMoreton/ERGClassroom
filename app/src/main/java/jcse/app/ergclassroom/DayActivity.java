@@ -27,16 +27,29 @@ public class DayActivity extends AppCompatActivity {
         final int weekId= intent.getIntExtra("weekId",0);
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
         String fileText=getLessonFromJson.readFromFile();
-        ArrayList<HashMap<String,String>> dayList =getLessonFromJson.getLessonActivities(fileText,termId,weekId);
+        ArrayList<HashMap<String,String>> dayList =getLessonFromJson.getLessonsForDay(fileText,termId,weekId);
         for(int j =0; j<dayList.size(); j++){
             HashMap<String,String> hashMap;
             hashMap=dayList.get(j);
             Button button= new Button(this);
-            final int Id =Integer.parseInt(hashMap.get("lessonId"));
+            final int lessonId =Integer.parseInt(hashMap.get("lessonId"));
             button.setText(hashMap.get("lessonName"));
             LinearLayout linearLayout=(LinearLayout)findViewById(R.id.content_day);
             Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             linearLayout.addView(button,layoutParams);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), TabbedActivity.class);
+                    intent.putExtra("termId",termId);
+                    intent.putExtra("weekId",weekId);
+                    intent.putExtra("lessonId",lessonId);
+                    intent.addFlags(0);
+                    startActivity(intent);
+
+                }
+            });
+
         }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

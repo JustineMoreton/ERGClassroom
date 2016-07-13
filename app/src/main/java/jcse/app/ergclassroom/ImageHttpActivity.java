@@ -131,19 +131,51 @@ Log.d(DEBUG_TAG,"image on create");
             InputStream is = null;
             HashMap<String,String> hashmap;
             int size =allHashmaps.length;
+
             for(int i =0; i<size; i++) {
 
                 hashmap=allHashmaps[i];
                 String termId = hashmap.get("termId");
                 String weekId = hashmap.get("weekId");
                 String lessonId = hashmap.get("lessonId");
-                int numberofActivities = Integer.parseInt(hashmap.get("slideNumber"));
-                for (int j=0; j<numberofActivities; j++) {
+                String slideUrl= hashmap.get("slideSrcUrl"+(i));
+                String hashSlideName= hashmap.get("slideFileName"+(i));
+                String modDate = hashmap.get("slideSrcDate"+(i));
+                String slideName=termId+"_"+weekId+"_"+lessonId+"_"+hashSlideName;
+                try {
+                    URL get_url = new URL(slideUrl);
+                    connection = (HttpURLConnection) get_url.openConnection();
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    connection.connect();
+                    is = new BufferedInputStream(connection.getInputStream());
+
+                        final Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        saveImageToInternalStorage(bitmap, getApplicationContext(), slideName, modDate);
+
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    connection.disconnect();
+                    try {
+                        is.close();
+                        downloadURlSuccess="slide download success";
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                int resourceNumber = Integer.parseInt(hashmap.get("resourceNumber"));
+                for (int j=0; j<resourceNumber; j++) {
                     String url= hashmap.get("resourceSrcUrl"+(j));
-                    String hashSlideName= hashmap.get("resourceRefName"+(j));
-                    String modDate = hashmap.get("resourceSrcDate"+(j));
+                    String hashResName= hashmap.get("resourceRefName"+(j));
+                    String modResDate = hashmap.get("resourceSrcDate"+(j));
                     String type=hashmap.get("type"+(j));
-                    String slidename=hashSlideName;
+
 
 
                     try {
@@ -155,18 +187,18 @@ Log.d(DEBUG_TAG,"image on create");
                         is = new BufferedInputStream(connection.getInputStream());
                         if(type.equals("image")) {
                             final Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            saveImageToInternalStorage(bitmap, getApplicationContext(), slidename, modDate);
+                            saveImageToInternalStorage(bitmap, getApplicationContext(), hashResName, modResDate);
                         }
                         else if(type.equals("video")){
-                            saveVideoToInternalStorage(is,getApplicationContext(),slidename,modDate);
+                            saveVideoToInternalStorage(is,getApplicationContext(),hashResName,modResDate);
 
                         }
                         else if(type.equals("pdf")){
-                            saveVideoToInternalStorage(is,getApplicationContext(),slidename,modDate);
+                            saveVideoToInternalStorage(is,getApplicationContext(),hashResName,modResDate);
 
                         }
                         else if(type.equals("audio")){
-                            saveVideoToInternalStorage(is,getApplicationContext(),slidename,modDate);
+                            saveVideoToInternalStorage(is,getApplicationContext(),hashResName,modResDate);
 
                         }
 
