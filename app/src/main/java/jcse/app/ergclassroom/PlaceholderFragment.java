@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,21 +28,27 @@ public class PlaceholderFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     static String[] mArrayname;
+    static String mFileName;
 
     public PlaceholderFragment() {
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceholderFragment newInstance(int sectionNumber, String[] arrayname) {
+    public static PlaceholderFragment newInstance(int sectionNumber,String fileName) {
         PlaceholderFragment fragment = new PlaceholderFragment();
-        mArrayname=arrayname;
+        //mFileName=fileName;
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        args.putStringArray("arrayname",arrayname);
+        args.putString("fileName",fileName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,10 +56,12 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        mFileName=getArguments().getString("fileName");
         View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-        File file = new File(getActivity().getFilesDir(),mArrayname[(getArguments().getInt(ARG_SECTION_NUMBER)) - 1]);
+        File file = new File(getActivity().getFilesDir(),mFileName);
         try{
             Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
 
