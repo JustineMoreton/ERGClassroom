@@ -131,28 +131,29 @@ Log.d(DEBUG_TAG,"image on create");
             InputStream is = null;
             HashMap<String,String> hashmap;
             int size =allHashmaps.length;
-
+//change i to loop through slides after looping through hashmaps
             for(int i =0; i<size; i++) {
 
-                hashmap=allHashmaps[i];
+                hashmap = allHashmaps[i];
+                String slideNumber = hashmap.get("slideNumber");
+                for(int k=0; k<Integer.parseInt(slideNumber); k++){
                 String termId = hashmap.get("termId");
                 String weekId = hashmap.get("weekId");
                 String lessonId = hashmap.get("lessonId");
-                String slideUrl= hashmap.get("slideSrcUrl"+(i));
-                String hashSlideName= hashmap.get("slideFileName"+(i));
-                String modDate = hashmap.get("slideSrcDate"+(i));
-                String slideName=termId+"_"+weekId+"_"+lessonId+"_"+hashSlideName;
+                String slideUrl = hashmap.get("slideSrcUrl" + (k));
+                String hashSlideName = hashmap.get("slideFileName" + (k));
+                String modDate = hashmap.get("slideSrcDate" + (k));
+                String slideName = termId + "_" + weekId + "_" + lessonId + "_" + hashSlideName;
                 try {
                     URL get_url = new URL(slideUrl);
                     connection = (HttpURLConnection) get_url.openConnection();
                     connection.setDoInput(true);
-                    connection.setDoOutput(true);
+                    // connection.setDoOutput(true);
                     connection.connect();
                     is = new BufferedInputStream(connection.getInputStream());
 
-                        final Bitmap bitmap = BitmapFactory.decodeStream(is);
-                        saveImageToInternalStorage(bitmap, getApplicationContext(), slideName, modDate);
-
+                    final Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    saveImageToInternalStorage(bitmap, getApplicationContext(), slideName, modDate);
 
 
                 } catch (MalformedURLException e) {
@@ -163,42 +164,41 @@ Log.d(DEBUG_TAG,"image on create");
                     connection.disconnect();
                     try {
                         is.close();
-                        downloadURlSuccess="slide download success";
+                        downloadURlSuccess = "slide download success";
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
 
                 int resourceNumber = Integer.parseInt(hashmap.get("resourceNumber"));
-                for (int j=0; j<resourceNumber; j++) {
-                    String url= hashmap.get("resourceSrcUrl"+(j));
-                    String hashResName= hashmap.get("resourceRefName"+(j));
-                    String modResDate = hashmap.get("resourceSrcDate"+(j));
-                    String type=hashmap.get("type"+(j));
-
+                for (int j = 0; j < resourceNumber; j++) {
+                    String url = hashmap.get((k) + "resourceSrcUrl" + (j));
+                    String hashResName = hashmap.get((k) + "resourceRefName" + (j));
+                    String modResDate = hashmap.get((k) + "resourceSrcDate" + (j));
+                    String type = hashmap.get((k) + "type" + (j));
 
 
                     try {
                         URL get_url = new URL(url);
                         connection = (HttpURLConnection) get_url.openConnection();
                         connection.setDoInput(true);
-                        connection.setDoOutput(true);
+                        //connection.setDoOutput(true);
                         connection.connect();
                         is = new BufferedInputStream(connection.getInputStream());
-                        if(type.equals("image")) {
+                        if (type.equals("image")) {
                             final Bitmap bitmap = BitmapFactory.decodeStream(is);
                             saveImageToInternalStorage(bitmap, getApplicationContext(), hashResName, modResDate);
                         }
-                        else if(type.equals("video")){
-                            saveVideoToInternalStorage(is,getApplicationContext(),hashResName,modResDate);
+                        if (type.equals("video")) {
+                            saveVideoToInternalStorage(is, getApplicationContext(), hashResName, modResDate);
 
                         }
-                        else if(type.equals("pdf")){
-                            saveVideoToInternalStorage(is,getApplicationContext(),hashResName,modResDate);
+                        if (type.equals("pdf")) {
+                            saveVideoToInternalStorage(is, getApplicationContext(), hashResName, modResDate);
 
                         }
-                        else if(type.equals("audio")){
-                            saveVideoToInternalStorage(is,getApplicationContext(),hashResName,modResDate);
+                        if (type.equals("audio")) {
+                            saveVideoToInternalStorage(is, getApplicationContext(), hashResName, modResDate);
 
                         }
 
@@ -211,12 +211,13 @@ Log.d(DEBUG_TAG,"image on create");
                         connection.disconnect();
                         try {
                             is.close();
-                            downloadURlSuccess="url download success";
+                            downloadURlSuccess = "url download success";
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }
+            }
             }
 
             return downloadURlSuccess;

@@ -51,11 +51,19 @@ public class TabbedActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-    static int[] arrayname;
+    static String[] resourceFiles;
+    static String[] resourceNames;
+    static String[] resourceTypes;
+
     HashMap<String,String> hashMap;
     static String[] slideNameArray;
     String slideName;
     int slideNumber;
+    int resourceNumber;
+    String resourceFile;
+    String resourceName;
+    String resourceType;
+    HashMap<String,String[]> resourceArrays;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +80,34 @@ public class TabbedActivity extends AppCompatActivity {
             hashMap=arrayList.get(0);
             slideNumber=Integer.parseInt(hashMap.get("slideNumber"));
             slideNameArray = new String[slideNumber];
+        resourceArrays=new HashMap<>();
 
         for(int i=0; i<slideNumber; i++){
 
             slideName=hashMap.get("slideFileName"+(i));
             slideNameArray[i]=termId+"_"+weekId+"_"+lessonId+"_"+slideName;
-
+            // Get resource Name for clickable listView
+            //Get resource File Name for
+            resourceNumber=Integer.parseInt(hashMap.get("resourceNumber"+(i)));
+            resourceFiles =new String[resourceNumber];
+            resourceNames =new String[resourceNumber];
+            resourceTypes=new String[resourceNumber];
+            HashMap<String,String[]> resourceForArray=new HashMap<String, String[]>();
+            for(int j =0; j<resourceNumber; j++){
+                resourceName=hashMap.get((i)+"resourceScreenName"+(j));
+                resourceNames[j]=resourceName;
+                resourceFile=hashMap.get((i)+"resourceRefName"+(j));
+                resourceFiles[j]=resourceFile;
+                resourceType=hashMap.get((i)+"type"+(j));
+                resourceTypes[j]=resourceType;
+                resourceForArray.put("resourceNames"+(i),resourceNames);
+                resourceForArray.put("resourceFiles"+(i),resourceFiles);
+                resourceForArray.put("resourceTypes"+(i),resourceTypes);
+            }
+            resourceArrays.putAll(resourceForArray);
         }
+
+        //for(int i=0; i<)
           //  map = (HashMap<String, int[]>) getIntent().getSerializableExtra("maparray");
           //  arrayname = map.get("notelist");
 
@@ -87,7 +116,7 @@ public class TabbedActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),slideNameArray);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),slideNameArray,resourceArrays);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -129,7 +158,8 @@ public class TabbedActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tabbed, menu);
+
+
         return true;
     }
 
@@ -157,7 +187,7 @@ public class TabbedActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm, String[] array) {
+        public SectionsPagerAdapter(FragmentManager fm, String[] array, HashMap<String,String[]> resourceArrays) {
             super(fm);
 
         }
@@ -165,10 +195,14 @@ public class TabbedActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             String sendFileName =slideNameArray[position];
+            String[] resourceNames=resourceArrays.get("resourceNames"+(position));
+            String[] resourceFiles=resourceArrays.get("resourceFiles"+(position));
+            String[] resourceTypes=resourceArrays.get("resourceTypes"+(position));
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position,sendFileName);
+            return PlaceholderFragment.newInstance(position,sendFileName,resourceNames,resourceFiles,resourceTypes);
         }
+
 
 
         @Override

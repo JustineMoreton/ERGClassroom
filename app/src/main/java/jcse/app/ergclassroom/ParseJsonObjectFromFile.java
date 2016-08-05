@@ -124,7 +124,7 @@ public class ParseJsonObjectFromFile extends IntentService{
                         JSONArray weeks =term.getJSONArray("weeks");
                         HashMap<String,String> mapTerm = new HashMap<String,String>();
                         mapTerm.put("termId",termid);
-                        if(weeks!= null){
+                        if(weeks.length()>0){
                             for(int w = 0; w<weeks.length(); w++){
                                 JSONObject week = weeks.getJSONObject(w);
                                 if(week != null){
@@ -135,7 +135,7 @@ public class ParseJsonObjectFromFile extends IntentService{
                                     mapWeek.put("weekId",weekId);
                                     mapWeek.put("weekName",weekName);
                                     JSONArray lessons=week.getJSONArray("lessons");
-                                    if(lessons != null){
+                                    if(lessons.length()>0){
                                         for(int l=0; l<lessons.length();l++){
                                             HashMap<String,String> directoryValues = new HashMap<String,String>();
                                             directoryValues.putAll(mapWeek);
@@ -147,7 +147,7 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                 directoryValues.put("lessonName",lessonName);
                                                 directoryValues.put("lessonId",lessonId);
                                                 JSONArray slides = lesson.getJSONArray("slides");
-                                                if(slides != null){
+                                                if(slides.length()>0){
                                                     int slideNumber=slides.length();
                                                     directoryValues.put("slideNumber",""+(slideNumber));
                                                     for(int s =0; s<slides.length(); s++){
@@ -161,7 +161,7 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                             String slideFileName=slide.getString("slideFileName");
                                                             directoryValues.put("slideFileName"+(s),slideFileName);
                                                             JSONArray resources = slide.getJSONArray("resources");
-                                                            if(resources != null){
+                                                            if(resources.length()>0){
                                                                 int resourceNumber=resources.length();
                                                                 directoryValues.put("resourceNumber",""+(resourceNumber));
                                                                 for(int r =0; r<resources.length(); r++){
@@ -169,13 +169,15 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                                     if(oneResource != null){
                                                                         String type = oneResource.getString("type");
                                                                         String resourceId = oneResource.getString("resourceId");
+                                                                        String resourceScreenName = oneResource.getString("resourceScreenName");
                                                                         String resourceSrcUrl = oneResource.getString("resourceSrcUrl");
                                                                         String resourceSrcDate = oneResource.getString("resourceSrcDate");
                                                                         String resourceRefName = oneResource.getString("resourceRefName");
-                                                                        directoryValues.put("type"+(r),type);
-                                                                        directoryValues.put("resourceSrcUrl"+(r),resourceSrcUrl);
-                                                                        directoryValues.put("resourceRefName"+(r),resourceRefName);
-                                                                        directoryValues.put("resourceSrcDate"+(r),resourceSrcDate);
+                                                                        directoryValues.put((s)+"type"+(r),type);
+                                                                        directoryValues.put((s)+"resourceScreenName"+(r),resourceScreenName);
+                                                                        directoryValues.put((s)+"resourceSrcUrl"+(r),resourceSrcUrl);
+                                                                        directoryValues.put((s)+"resourceRefName"+(r),resourceRefName);
+                                                                        directoryValues.put((s)+"resourceSrcDate"+(r),resourceSrcDate);
                                                                     }
                                                                 }
 
@@ -185,15 +187,18 @@ public class ParseJsonObjectFromFile extends IntentService{
 
                                                 }
                                             }
+
                                             arrayList.add(directoryValues);
                                         }
 
 
                                     }
+                                    mapWeek.clear();
                                 }
 
                             }
                         }
+                        mapTerm.clear();
                     }
                 }
 
@@ -201,6 +206,8 @@ public class ParseJsonObjectFromFile extends IntentService{
 
         }catch (JSONException jsonException){
             Log.d(DEBUG_TAG, jsonException.getMessage());
+        } catch (Exception e) {
+            Log.d("Json parse", e.getLocalizedMessage());
         }
         return arrayList;
     }
