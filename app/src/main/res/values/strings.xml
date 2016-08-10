@@ -12,6 +12,8 @@
     <string name="prev">Prev</string>
     <string name="next">Next</string>
     <string name="close">Close</string>
+    <string name="preparation">In Preparation</string>
+    <string name="classroom">In Classroom</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_preparation"></string>
     <string name="section_format">section: %1$d</string>

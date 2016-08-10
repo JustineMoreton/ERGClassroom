@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
  * Created by Justine on 7/19/2016.
  */
 public class NoDefaultSpinner extends Spinner {
-
+    private int lastSelected = 0;
     public NoDefaultSpinner(Context context) {
         super(context);
     }
@@ -30,7 +30,15 @@ public class NoDefaultSpinner extends Spinner {
     public NoDefaultSpinner(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if(this.lastSelected == this.getSelectedItemPosition() && getOnItemSelectedListener() != null)
+            getOnItemSelectedListener().onItemSelected(this, getSelectedView(), this.getSelectedItemPosition(), getSelectedItemId());
+        if(!changed)
+            lastSelected = this.getSelectedItemPosition();
 
+        super.onLayout(changed, l, t, r, b);
+    }
     @Override
     public void setAdapter(SpinnerAdapter orig ) {
         final SpinnerAdapter adapter = newProxy(orig);
@@ -105,7 +113,7 @@ public class NoDefaultSpinner extends Spinner {
                         (TextView) ((LayoutInflater)getContext().getSystemService(
                                 Context.LAYOUT_INFLATER_SERVICE)).inflate(
                                 R.layout.custom_spinner_item,parent,false);
-                v.setText("Click here for more Resources");
+                v.setText("Resources");
                 return v;
             }
             return obj.getView(position,convertView,parent);

@@ -13,7 +13,7 @@
     tools:showIn="@layout/activity_navigate">
 
     <Button
-        android:text="In Classroom"
+        android:text="@string/classroom"
         android:id="@+id/button"
         android:onClick="goToClassroom"
         android:layout_alignParentTop="true"
@@ -38,7 +38,7 @@
         android:background="@drawable/bluebutton"/>
 
     <Button
-        android:text="My profile"
+        android:text="@string/preparation"
         android:id="@+id/button3"
         android:onClick="profile"
         android:layout_below="@+id/button2"

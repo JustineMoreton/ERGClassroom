@@ -38,10 +38,6 @@ public class TabbedActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
 
-    int[] prepitems =new int[]{
-            R.drawable.management_note_001,
-            R.drawable.management_note_002
-    };
 
     private ViewPager mViewPager;
 
@@ -122,33 +118,22 @@ public class TabbedActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        final Bundle lessonArgs = new Bundle();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
-        if(flag==0) {
+
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
 
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), FinishLessonActivity.class);
-
-                    startActivity(intent, lessonArgs);
+                    Intent intent = new Intent(view.getContext(), DayActivity.class);
+                    intent.putExtra("termId",termId);
+                    intent.putExtra("weekId",weekId);
+                    startActivity(intent);
                 }
             });
-        }
-        if(flag==1) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
 
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), PreparationListActivity.class);
-                    map.put("notelist",prepitems);
-                    intent.putExtra("maparray",map);
-                    startActivity(intent, lessonArgs);
-                }
-            });
-        }
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

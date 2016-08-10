@@ -3,7 +3,10 @@ package jcse.app.ergclassroom;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.pdf.PdfRenderer;
@@ -36,10 +39,18 @@ public class SlideFragmentDialog extends DialogFragment{
     private PdfRenderer pdfRenderer;
     private PdfRenderer.Page currentPage;
     private ImageView image;
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+    }
+
     private Button btnPrevious;
     private Button btnNext;
     private Button btnClose;
     private File file;
+    SelectedFilePath selectedFilePath;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +69,7 @@ public class SlideFragmentDialog extends DialogFragment{
         mType= getArguments().getString("type");
         mUriPath= getArguments().getParcelable("uriPath");
         file = new File(mUriPath.getPath());
-        file.getAbsolutePath();
+
 
         View view = null;
         if (mType.equals("video")||mType.equals("audio")||mType.equals("image")) {
@@ -98,11 +109,12 @@ public class SlideFragmentDialog extends DialogFragment{
             videoView.seekTo(0);
             videoView.start();}
         if (mType.equals("pdf")) {
-
+//selectedFilePath = new SelectedFilePath();
+          //  String filePath=file.getAbsolutePath();
             // create a new renderer
             //ImageView imageView = (ImageView) builder.findViewById(R.id.dialogImageView);
             /*Bitmap bitmap = Bitmap.createBitmap(2480, 3508, Bitmap.Config.ARGB_4444);
-            PdfRenderer renderer;
+           /* PdfRenderer renderer;
             ParcelFileDescriptor parcelFileDescriptor;*/
            // LinearLayout linearLayout1 = (LinearLayout) builder.findViewById(R.id.linearLayout1);
             /*try{
@@ -112,8 +124,8 @@ public class SlideFragmentDialog extends DialogFragment{
             }*/
              try{
 
-                 fileDescriptor=mContext.getAssets().openFd(file.getName()).getParcelFileDescriptor();
-
+                 fileDescriptor=ParcelFileDescriptor.open(file,ParcelFileDescriptor.MODE_READ_ONLY);
+                 Log.d("filePath","check file");
                  pdfRenderer=new PdfRenderer(fileDescriptor);}
             catch (IOException io){
                 Log.e("open renderer",io.getMessage());
@@ -122,6 +134,7 @@ public class SlideFragmentDialog extends DialogFragment{
 //                final int pageCount = pdfRenderer.getPageCount();
 
                     image = (ImageView) view.findViewById(R.id.pdfImage);
+                    image.setBackgroundColor(Color.parseColor("#ffffff"));
                   //  ImageView pdfImageView = new ImageView(getActivity());
                     btnPrevious = (Button) view.findViewById(R.id.buttonPrev);
                     btnNext = (Button) view.findViewById(R.id.buttonNext);
@@ -140,9 +153,44 @@ public class SlideFragmentDialog extends DialogFragment{
 
 
 
+        }if (mType.equals("audio")) {
+        builder.setTitle("Audio file: you might need to use headphones");
+        MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), mUriPath);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                builder.cancel();
+                mp.release();
+
+            }
+        });
+        try {
+            // mediaPlayer.setDataSource(getActivity(), uriPath);
+            mediaPlayer.setVolume(1.0f, 1.0f);
+            // mediaPlayer.prepare();
+        } catch (Exception ioException) {
+            Log.e("Audio_uri", mUriPath + "" + ioException);
         }
+
+        mediaPlayer.start();
+    }if (mType.equals("image")){
+        String filePath=file.getAbsolutePath();
+        ImageView imageView = (ImageView) builder.findViewById(R.id.dialogImageView);
+        Bitmap bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_4444);
+        bitmap = BitmapFactory.decodeFile(filePath);
+        imageView.setImageBitmap(bitmap);
+
+    }
         return builder;
     }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+    }
+
     public static SlideFragmentDialog newInstance(String type, Uri uriPath) {
         SlideFragmentDialog slideFragmentDialog= new SlideFragmentDialog();
         Bundle args = new Bundle();
@@ -166,11 +214,11 @@ public class SlideFragmentDialog extends DialogFragment{
 
     @Override
     public void onDestroy() {
-        try {
+       /* try {
             closeRenderer();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         super.onDestroy();
     }
 
@@ -208,14 +256,14 @@ public class SlideFragmentDialog extends DialogFragment{
         if (pdfRenderer.getPageCount() <= index) {
             return;
         }
-        // Make sure to close the current page before opening another one.
+        // Make sure to close the current page before opening another one. sending message to a Handler on a dead thread
         if (null != currentPage) {
             currentPage.close();
         }
         //open a specific page in PDF file
         currentPage = pdfRenderer.openPage(index);
         // Important: the destination bitmap must be ARGB (not RGB).
-        Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(),
+        Bitmap bitmap = Bitmap.createBitmap(1240, 1754,
                 Bitmap.Config.ARGB_8888);
         // Here, we render the page onto the Bitmap.
         currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
@@ -249,4 +297,5 @@ public class SlideFragmentDialog extends DialogFragment{
         };
     }
 }
+
 
