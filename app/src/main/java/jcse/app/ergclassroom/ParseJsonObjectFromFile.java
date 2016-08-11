@@ -173,11 +173,13 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                                         String resourceSrcUrl = oneResource.getString("resourceSrcUrl");
                                                                         String resourceSrcDate = oneResource.getString("resourceSrcDate");
                                                                         String resourceRefName = oneResource.getString("resourceRefName");
+                                                                        String resourcePermanent = oneResource.getString("resourcePermanent");
                                                                         directoryValues.put((s)+"type"+(r),type);
                                                                         directoryValues.put((s)+"resourceScreenName"+(r),resourceScreenName);
                                                                         directoryValues.put((s)+"resourceSrcUrl"+(r),resourceSrcUrl);
                                                                         directoryValues.put((s)+"resourceRefName"+(r),resourceRefName);
                                                                         directoryValues.put((s)+"resourceSrcDate"+(r),resourceSrcDate);
+                                                                        directoryValues.put((s)+"resourcePermanent"+(r),resourcePermanent);
                                                                     }
                                                                 }
 

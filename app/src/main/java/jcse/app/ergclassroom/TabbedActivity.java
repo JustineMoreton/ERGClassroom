@@ -50,6 +50,7 @@ public class TabbedActivity extends AppCompatActivity {
     static String[] resourceFiles;
     static String[] resourceNames;
     static String[] resourceTypes;
+    static String[] resourcePermanence;
 
     HashMap<String,String> hashMap;
     static String[] slideNameArray;
@@ -59,6 +60,7 @@ public class TabbedActivity extends AppCompatActivity {
     String resourceFile;
     String resourceName;
     String resourceType;
+    String resourcePermanent;
     HashMap<String,String[]> resourceArrays;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class TabbedActivity extends AppCompatActivity {
             resourceFiles =new String[resourceNumber];
             resourceNames =new String[resourceNumber];
             resourceTypes=new String[resourceNumber];
+            resourcePermanence=new String[resourceNumber];
             HashMap<String,String[]> resourceForArray=new HashMap<String, String[]>();
             for(int j =0; j<resourceNumber; j++){
                 resourceName=hashMap.get((i)+"resourceScreenName"+(j));
@@ -96,9 +99,12 @@ public class TabbedActivity extends AppCompatActivity {
                 resourceFiles[j]=resourceFile;
                 resourceType=hashMap.get((i)+"type"+(j));
                 resourceTypes[j]=resourceType;
+                resourcePermanent=hashMap.get((i)+"resourcePermanent"+(j));
+                resourcePermanence[j]=resourcePermanent;
                 resourceForArray.put("resourceNames"+(i),resourceNames);
                 resourceForArray.put("resourceFiles"+(i),resourceFiles);
                 resourceForArray.put("resourceTypes"+(i),resourceTypes);
+                resourceForArray.put("resourcePermanent"+(i),resourcePermanence);
             }
             resourceArrays.putAll(resourceForArray);
         }
@@ -183,9 +189,10 @@ public class TabbedActivity extends AppCompatActivity {
             String[] resourceNames=resourceArrays.get("resourceNames"+(position));
             String[] resourceFiles=resourceArrays.get("resourceFiles"+(position));
             String[] resourceTypes=resourceArrays.get("resourceTypes"+(position));
+            String[] resourcePermanence=resourceArrays.get("resourcePermanent"+(position));
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position,sendFileName,resourceNames,resourceFiles,resourceTypes);
+            return PlaceholderFragment.newInstance(position,sendFileName,resourceNames,resourceFiles,resourceTypes,resourcePermanence);
         }
 
 
@@ -197,18 +204,7 @@ public class TabbedActivity extends AppCompatActivity {
             return slideNameArray.length;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
+
     }
 
     /**

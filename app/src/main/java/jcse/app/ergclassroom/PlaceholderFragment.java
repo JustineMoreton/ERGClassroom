@@ -38,6 +38,7 @@ public class PlaceholderFragment extends Fragment {
     static String[] mResourcesNames;
     static String[] mResourceFiles;
     static String[] mResourceTypes;
+    static String[] mResourcePermanence;
     //Spinner spinner;
     View rootView;
     public PlaceholderFragment() {
@@ -54,7 +55,7 @@ public class PlaceholderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceholderFragment newInstance(int sectionNumber,String fileName, String[] resourceNames, String[]resourceFiles, String[]resourceTypes) {
+    public static PlaceholderFragment newInstance(int sectionNumber,String fileName, String[] resourceNames, String[]resourceFiles, String[]resourceTypes, String[] resourcePermanence) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         //mFileName=fileName;
         Bundle args = new Bundle();
@@ -63,6 +64,7 @@ public class PlaceholderFragment extends Fragment {
         args.putStringArray("resourceNames",resourceNames);
         args.putStringArray("resourceFiles",resourceFiles);
         args.putStringArray("resourceTypes",resourceTypes);
+        args.putStringArray("resourcePermanence",resourcePermanence);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,11 +77,14 @@ public class PlaceholderFragment extends Fragment {
         mResourcesNames=getArguments().getStringArray("resourceNames");
         mResourceFiles=getArguments().getStringArray("resourceFiles");
         mResourceTypes=getArguments().getStringArray("resourceTypes");
+        mResourcePermanence=getArguments().getStringArray("resourcePermanence");
 
         menuInflater.inflate(R.menu.android_action_bar_spinner_menu, menu);
         MenuItem item = menu.findItem(R.id.spinner);
         final NoDefaultSpinner spinner = (NoDefaultSpinner) MenuItemCompat.getActionView(item);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner_item,mResourcesNames);
+        //ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner_item,mResourcesNames);
+        ArrayAdapter<String> spinnerAdapter = new CustomArrayAdapter(getActivity(),R.layout.custom_spinner_item,mResourcesNames,mResourcePermanence);
+
         spinnerAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
