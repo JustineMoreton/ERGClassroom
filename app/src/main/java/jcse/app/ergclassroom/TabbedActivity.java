@@ -1,6 +1,7 @@
 package jcse.app.ergclassroom;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,13 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public class TabbedActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -46,7 +49,7 @@ public class TabbedActivity extends AppCompatActivity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+
     static String[] resourceFiles;
     static String[] resourceNames;
     static String[] resourceTypes;
@@ -61,17 +64,25 @@ public class TabbedActivity extends AppCompatActivity {
     String resourceName;
     String resourceType;
     String resourcePermanent;
+     int termId;
+     int weekId;
+     int lessonId;
+    int flag;
+    SharedPreferences prefs;
+    public static final String USER_PREFS="userPrefs";
+    String timeStamp;
+    JSONObject jsonObject;
     HashMap<String,String[]> resourceArrays;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_tabbed);
         Intent intent=getIntent();
-        final int termId =intent.getIntExtra("termId",0);
-        final int weekId= intent.getIntExtra("weekId",0);
-        final int lessonId= intent.getIntExtra("lessonId",0);
-        int flag = getIntent().getFlags();
+        flag = getIntent().getFlags();
+        setContentView(R.layout.activity_tabbed);
+        termId =intent.getIntExtra("termId",0);
+        weekId= intent.getIntExtra("weekId",0);
+        lessonId= intent.getIntExtra("lessonId",0);
+
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
         String textFile=getLessonFromJson.readFromFile();
         ArrayList<HashMap<String,String>> arrayList=getLessonFromJson.getSlidesAndResourcesForLesson(textFile,termId,weekId,lessonId);
@@ -133,6 +144,7 @@ public class TabbedActivity extends AppCompatActivity {
 
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), DayActivity.class);
+                    intent.setFlags(1);
                     intent.putExtra("termId",termId);
                     intent.putExtra("weekId",weekId);
                     startActivity(intent);
@@ -140,10 +152,49 @@ public class TabbedActivity extends AppCompatActivity {
             });
 
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Long timeStampLong = System.currentTimeMillis()/1000;
+        timeStamp = timeStampLong.toString();
+        jsonObject = new JSONObject();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Long timeStampLong = System.currentTimeMillis()/1000;
+        String endTimeStamp = timeStampLong.toString();
+
+        prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+        String user =prefs.getString("user","no user");
+        try {
+            jsonObject.put("user",user);
+            jsonObject.put("TypeOfActivity",flag);
+            jsonObject.put("TermId", termId);
+            jsonObject.put("WeekId", weekId);
+            jsonObject.put("LessonId", lessonId);
+            jsonObject.put("StartTime", timeStamp);
+            jsonObject.put("EndTime", endTimeStamp);
+
+        }catch(JSONException jsonEx){
+            Log.e("Write Json", jsonEx.getMessage());
+        }
+        String timeStampsJson = jsonObject.toString();
+        SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
+        saveJsonToFile.appendJsonFile(getApplicationContext(),timeStampsJson,"timestamps.txt");
+        try {
+            ReadFromFile readFromFile = new ReadFromFile(getApplicationContext());
+            String timstampString =readFromFile.readFromFile("timestamps.txt");
+            System.out.print(timstampString);
+            System.out.print("");
+        }catch (Exception io){
+            Log.d("read File", io.getMessage());
+        }
+    }
+
 
 
     @Override
@@ -176,7 +227,7 @@ public class TabbedActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm, String[] array, HashMap<String,String[]> resourceArrays) {
             super(fm);

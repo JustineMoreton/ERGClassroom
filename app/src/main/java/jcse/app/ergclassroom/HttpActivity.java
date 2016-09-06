@@ -53,7 +53,7 @@ public class HttpActivity extends Activity {
 
 
         IntentFilter intentFilter = new IntentFilter(ImageResponseReceiver.ACTION_RESP);
-        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        intentFilter.addCategory(Intent.ACTION_DEFAULT);
         imageResponseReceiver = new ImageResponseReceiver();
         registerReceiver(imageResponseReceiver, intentFilter);
         Intent sendIntent =getIntent();
@@ -67,6 +67,11 @@ public class HttpActivity extends Activity {
         super.onPause();
         unregisterReceiver(this.receiver);
         unregisterReceiver(this.imageResponseReceiver);
+
+    }
+    @Override
+    protected void onStart(){
+        super.onStart();
 
     }
     @Override
@@ -92,7 +97,7 @@ public class HttpActivity extends Activity {
     // Before attempting to fetch the URL, makes sure that there is a network connection.
     public void getURl() {
         // Gets the URL from the UI's text field.
-        String stringUrl ="http://www.json-generator.com/api/json/get/cebtIkTJaq?indent=2";
+        String stringUrl ="http://www.json-generator.com/api/json/get/bPQfCkSUSW?indent=2";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

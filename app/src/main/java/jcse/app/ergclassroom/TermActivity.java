@@ -32,6 +32,8 @@ private final String DEBUG_TAG="";
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent mIntent=getIntent();
+        final int flag=mIntent.getFlags();
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
         String lessonFile = getLessonFromJson.readFromFile();
         ArrayList<HashMap<String,String>> termList=getLessonFromJson.getTermList(lessonFile);
@@ -48,6 +50,7 @@ private final String DEBUG_TAG="";
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), WeekActivity.class);
+                    intent.setFlags(flag);
                     intent.putExtra("termId",Id);
                     startActivity(intent);
                 }
@@ -60,14 +63,16 @@ private final String DEBUG_TAG="";
             Log.e("profile html",jsonException.getMessage());
         }*/
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-/*        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), NavigateActivity.class);
+                startActivity(intent);
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+
     }
     private String readFromFile() {
 

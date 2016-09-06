@@ -3,7 +3,6 @@ package jcse.app.ergclassroom;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,6 +22,7 @@ public class WeekActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intent=getIntent();
+        final int flag=intent.getFlags();
         final int termId =intent.getIntExtra("termId",0);
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
         String fileText=getLessonFromJson.readFromFile();
@@ -40,6 +40,7 @@ public class WeekActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DayActivity.class);
+                    intent.setFlags(flag);
                     intent.putExtra("termId",termId);
                     intent.putExtra("weekId",weekId);
                     startActivity(intent);
@@ -50,10 +51,13 @@ public class WeekActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), NavigateActivity.class);
+                startActivity(intent);
             }
         });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+
     }
 
 }

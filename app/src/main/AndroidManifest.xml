@@ -149,6 +149,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.WeekActivity" />
         </activity>
+        <activity
+            android:name=".TabbedClassroomActivity"
+            android:label="@string/title_activity_tabbed_classroom"
+            android:parentActivityName=".DayActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jcse.app.ergclassroom.DayActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -21,7 +21,7 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 
 /**
  * Created by Justine on 7/13/2016.
@@ -129,16 +129,15 @@ public class PlaceholderFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
 
         File file = new File(getActivity().getFilesDir(),mFileName);
-        try{
-            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
 
 
 
             ImageView imageView = (ImageView) rootView.findViewById(R.id.tabbedImageView);
-            imageView.setImageBitmap(bitmap);
-        }catch (IOException IO){
-            Log.e("PlaceHolderFragmeant",IO.getMessage());
-        }
+            imageView.setImageBitmap(decodeSampledBitmapFromResource(file,R.id.tabbedImageView, 1280, 800));
+
             /*try {
             File file = new File(getFilesDir(),arrayname[(getArguments().getInt(ARG_SECTION_NUMBER)) - 1]);
             Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
@@ -149,5 +148,50 @@ public class PlaceholderFragment extends Fragment {
             //
         }*/
         return rootView;
+    }
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+    public static Bitmap decodeSampledBitmapFromResource(File file, int resId,
+                                                         int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        //BitmapFactory.decodeResource(res, resId, options);
+        Bitmap bitmap = null;
+        try {
+            BitmapFactory.decodeStream(new FileInputStream(file), null, options);
+
+            // Calculate inSampleSize
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            //return BitmapFactory.decodeResource(res, resId, options);
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(file),null,options);
+        }catch (FileNotFoundException fileNotFound){
+            Log.e("Classroom fragment", fileNotFound.getMessage());
+        }
+        return bitmap;
     }
 }

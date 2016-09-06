@@ -27,8 +27,10 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
 
+        if(prefs.contains("first_login")){
 
-            userFirstLogin= prefs.getBoolean("first_login",true);
+        }else{userFirstLogin= prefs.getBoolean("first_login",true);}
+
 
 
             synced = prefs.getBoolean("first_synced", false);

@@ -3,7 +3,6 @@ package jcse.app.ergclassroom;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,6 +22,7 @@ public class DayActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intent=getIntent();
+        final int flag= intent.getFlags();
         final int termId =intent.getIntExtra("termId",0);
         final int weekId= intent.getIntExtra("weekId",0);
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
@@ -40,12 +40,22 @@ public class DayActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), TabbedActivity.class);
-                    intent.putExtra("termId",termId);
-                    intent.putExtra("weekId",weekId);
-                    intent.putExtra("lessonId",lessonId);
-                    intent.addFlags(0);
-                    startActivity(intent);
+                    if(flag==1){
+                        Intent intent = new Intent(v.getContext(), TabbedActivity.class);
+                        intent.setFlags(flag);
+                        intent.putExtra("termId",termId);
+                        intent.putExtra("weekId",weekId);
+                        intent.putExtra("lessonId",lessonId);
+                        startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(v.getContext(), TabbedClassroomActivity.class);
+                        intent.setFlags(flag);
+                        intent.putExtra("termId",termId);
+                        intent.putExtra("weekId",weekId);
+                        intent.putExtra("lessonId",lessonId);
+                        startActivity(intent);
+                    }
+
 
                 }
             });
@@ -55,11 +65,13 @@ public class DayActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), NavigateActivity.class);
+                startActivity(intent);
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+
     }
 
 }
