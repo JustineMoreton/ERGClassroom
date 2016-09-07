@@ -136,7 +136,7 @@ public class PlaceholderFragment extends Fragment {
 
 
             ImageView imageView = (ImageView) rootView.findViewById(R.id.tabbedImageView);
-            imageView.setImageBitmap(decodeSampledBitmapFromResource(file,R.id.tabbedImageView, 1280, 800));
+            imageView.setImageBitmap(decodeSampledBitmapFromResource(file,R.id.tabbedImageView, 800, 600));
 
             /*try {
             File file = new File(getFilesDir(),arrayname[(getArguments().getInt(ARG_SECTION_NUMBER)) - 1]);

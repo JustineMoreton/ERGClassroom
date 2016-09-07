@@ -48,7 +48,7 @@ public class TabbedClassroomActivityFragment extends Fragment {
             options.inJustDecodeBounds = true;
 
             ImageView imageView = (ImageView) rootView.findViewById(R.id.tabbedImageView);
-            imageView.setImageBitmap(decodeSampledBitmapFromResource(file,R.id.tabbedImageView, 1280, 800));
+            imageView.setImageBitmap(decodeSampledBitmapFromResource(file,R.id.tabbedImageView, 800, 600));
 
 
         return rootView;
