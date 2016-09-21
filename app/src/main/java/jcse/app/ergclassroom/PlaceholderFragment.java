@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,7 +40,8 @@ public class PlaceholderFragment extends Fragment {
     static String[] mResourceFiles;
     static String[] mResourceTypes;
     static String[] mResourcePermanence;
-    //Spinner spinner;
+    NoDefaultSpinner spinner=null;
+    ArrayAdapter<String> spinnerAdapter=null;
     View rootView;
     public PlaceholderFragment() {
 
@@ -81,36 +83,53 @@ public class PlaceholderFragment extends Fragment {
 
         menuInflater.inflate(R.menu.android_action_bar_spinner_menu, menu);
         MenuItem item = menu.findItem(R.id.spinner);
-        final NoDefaultSpinner spinner = (NoDefaultSpinner) MenuItemCompat.getActionView(item);
+        spinner = (NoDefaultSpinner) MenuItemCompat.getActionView(item);
         //ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner_item,mResourcesNames);
-        ArrayAdapter<String> spinnerAdapter = new CustomArrayAdapter(getActivity(),R.layout.custom_spinner_item,mResourcesNames,mResourcePermanence);
+        spinnerAdapter= new CustomArrayAdapter(getActivity(),R.layout.custom_spinner_item,mResourcesNames,mResourcePermanence);
 
         spinnerAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String type = mResourceTypes[position];
-                File file = new File(getActivity().getFilesDir(), mResourceFiles[position]);
+        SpinnerInteractionListener listener = new SpinnerInteractionListener();
+        spinner.setOnTouchListener(listener);
+        spinner.setOnItemSelectedListener(listener);
+
+
+
+
+    }
+    public class SpinnerInteractionListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener {
+
+        boolean userSelect = false;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            userSelect = true;
+            return false;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            if (userSelect) {
+                String type = mResourceTypes[pos];
+                File file = new File(getActivity().getFilesDir(), mResourceFiles[pos]);
 
                 Uri uriPath = Uri.parse(file.toString());
                 SlideFragmentDialog slideFragmentDialog = SlideFragmentDialog.newInstance(type,uriPath);
 
+
                 slideFragmentDialog.show(getFragmentManager(), "fragmentDialog");
-
-
-
-            }
-
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                userSelect = false;
+                spinner.setAdapter(spinnerAdapter);
 
             }
-        });
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
 
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

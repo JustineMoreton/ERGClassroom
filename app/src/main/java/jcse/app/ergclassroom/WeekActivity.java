@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,6 +34,7 @@ public class WeekActivity extends AppCompatActivity {
             Button button= new Button(this);
             final int weekId =Integer.parseInt(hashMap.get("weekId"));
             button.setText(hashMap.get("weekName"));
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
             LinearLayout linearLayout=(LinearLayout)findViewById(R.id.content_week);
             Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             linearLayout.addView(button,layoutParams);

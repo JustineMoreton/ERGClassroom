@@ -31,7 +31,7 @@ String[] mPermanence;
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         TextView textView = (TextView) super.getView(position, convertView, parent);
         if(mPermanence[position].equals("true")){
-            textView.setTextColor(Color.BLACK);
+            textView.setTextColor(Color.LTGRAY);
         }
         return textView;
     }

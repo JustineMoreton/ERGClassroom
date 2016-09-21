@@ -24,7 +24,7 @@ String gotJsonString;
     public void run() {
 
         try {
-            URL url = new URL("http://10.0.2.3:58518/api/Values");
+            URL url = new URL("http://egr2.jcse-himat.com/api/timestamps");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
@@ -45,6 +45,9 @@ String gotJsonString;
 
             int response = conn.getResponseCode();
             Log.d(DEBUG_TAG, "The response is: " + response);
+            if(response == 200){
+
+            }
             writer.flush();
             writer.close();
             //os.close();

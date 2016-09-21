@@ -88,6 +88,15 @@ public class SlideFragmentDialog extends DialogFragment{
         if (mType.equals("video")) {
             getActivity().getWindow().setFormat(PixelFormat.TRANSLUCENT);
             Log.v("Vidoe-URI", mUriPath + "");
+            btnClose=(Button) view.findViewById(R.id.closeButton);
+            btnClose.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    getDialog().dismiss();
+
+                }
+            });
             final VideoView videoView = (VideoView) builder.findViewById(R.id.dialogVideoView);
             videoView.findViewById(R.id.dialogVideoView);
             videoView.setZOrderOnTop(true);
@@ -107,21 +116,10 @@ public class SlideFragmentDialog extends DialogFragment{
             });
             videoView.setVideoURI(mUriPath);
             videoView.seekTo(0);
-            videoView.start();}
+            videoView.start();
+        }
         if (mType.equals("pdf")) {
-//selectedFilePath = new SelectedFilePath();
-          //  String filePath=file.getAbsolutePath();
-            // create a new renderer
-            //ImageView imageView = (ImageView) builder.findViewById(R.id.dialogImageView);
-            /*Bitmap bitmap = Bitmap.createBitmap(2480, 3508, Bitmap.Config.ARGB_4444);
-           /* PdfRenderer renderer;
-            ParcelFileDescriptor parcelFileDescriptor;*/
-           // LinearLayout linearLayout1 = (LinearLayout) builder.findViewById(R.id.linearLayout1);
-            /*try{
-                openRenderer();}
-            catch (IOException io){
-                Log.e("open renderer",io.getMessage());
-            }*/
+
              try{
 
                  fileDescriptor=ParcelFileDescriptor.open(file,ParcelFileDescriptor.MODE_READ_ONLY);
@@ -136,10 +134,18 @@ public class SlideFragmentDialog extends DialogFragment{
                     image = (ImageView) view.findViewById(R.id.pdfImage);
                     image.setBackgroundColor(Color.parseColor("#ffffff"));
                   //  ImageView pdfImageView = new ImageView(getActivity());
+                    btnClose=(Button) view.findViewById(R.id.closeButton);
                     btnPrevious = (Button) view.findViewById(R.id.buttonPrev);
                     btnNext = (Button) view.findViewById(R.id.buttonNext);
                     btnPrevious.setOnClickListener(onActionListener(-1)); //previous button clicked
                     btnNext.setOnClickListener(onActionListener(1)); //next button clicked
+                    btnClose.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            getDialog().dismiss();
+                        }
+                    });
 
                 int index = 0;
                 // If there is a savedInstanceState (screen orientations, etc.), we restore the page index.
@@ -155,7 +161,8 @@ public class SlideFragmentDialog extends DialogFragment{
 
         }if (mType.equals("audio")) {
         builder.setTitle("Audio file: you might need to use headphones");
-        MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), mUriPath);
+        btnClose=(Button) view.findViewById(R.id.closeButton);
+        final MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), mUriPath);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             @Override
@@ -172,15 +179,30 @@ public class SlideFragmentDialog extends DialogFragment{
         } catch (Exception ioException) {
             Log.e("Audio_uri", mUriPath + "" + ioException);
         }
+        btnClose.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+                getDialog().dismiss();
+                mediaPlayer.stop();
+            }
+        });
         mediaPlayer.start();
     }if (mType.equals("image")){
         String filePath=file.getAbsolutePath();
         ImageView imageView = (ImageView) builder.findViewById(R.id.dialogImageView);
-        Bitmap bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_4444);
+        btnClose=(Button) view.findViewById(R.id.closeButton);
+        Bitmap bitmap = Bitmap.createBitmap(1000, 500, Bitmap.Config.ARGB_4444);
         bitmap = BitmapFactory.decodeFile(filePath);
         imageView.setImageBitmap(bitmap);
+        btnClose.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+                getDialog().dismiss();
+
+            }
+        });
     }
         return builder;
     }
@@ -202,14 +224,7 @@ public class SlideFragmentDialog extends DialogFragment{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-/*        try {
-            openRenderer(activity);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.i("Fragment", "Error occurred!");
-            Log.e("Fragment", e.getMessage());
-            activity.finish();
-        }*/
+
     }
 
     @Override
@@ -296,6 +311,7 @@ public class SlideFragmentDialog extends DialogFragment{
             }
         };
     }
+
 }
 
 

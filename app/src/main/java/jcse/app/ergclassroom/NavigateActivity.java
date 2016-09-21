@@ -24,12 +24,12 @@ public class NavigateActivity extends AppCompatActivity {
                                           connection.createConnection();
                                            GetTextFromFile getTextFromFile= new GetTextFromFile(NavigateActivity.this,"timestamps.txt");
 
-                                          String sendString=getTextFromFile.readFromFile();
+                                          String sendString="{["+(getTextFromFile.readFromFile())+"]}";
                                           Runnable sendJsonToServer = new SendJsonToServer(sendString);
                                           new Thread(sendJsonToServer).start();
-                                          Intent intent = new Intent(view.getContext(),HttpActivity.class);
+                                          /*Intent intent = new Intent(view.getContext(),HttpActivity.class);
                                           startActivity(intent);
-                                          button.setText(R.string.synced);
+                                          button.setText(R.string.synced);*/
                                       }
                                   }
         );

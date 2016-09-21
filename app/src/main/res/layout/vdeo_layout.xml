@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
+
 <VideoView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:scaleType="fitCenter"
+    android:adjustViewBounds="true"
     android:id="@+id/dialogVideoView"/>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:cropToPadding="false"
@@ -18,5 +23,14 @@
             android:id="@+id/dialogImageView"
             android:background="@color/white"/>
     </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/closeX"
+        android:id="@+id/closeButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

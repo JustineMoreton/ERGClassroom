@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <ScrollView
-        android:layout_weight="1"
+        android:layout_weight="0.93"
         android:layout_above="@+id/mLlayoutBottomButtons"
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </ScrollView>
+
     <LinearLayout
         android:id="@+id/mLlayoutBottomButtons"
         android:layout_width="fill_parent"
@@ -28,15 +29,21 @@
             android:id="@+id/buttonPrev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="5"
             android:text="@string/prev" />
 
         <Button
             android:id="@+id/buttonNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="5"
             android:text="@string/next" />
+        <Button
+            android:id="@+id/closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/closeX" />
 
 
     </LinearLayout>

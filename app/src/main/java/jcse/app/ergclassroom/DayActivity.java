@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +35,7 @@ public class DayActivity extends AppCompatActivity {
             Button button= new Button(this);
             final int lessonId =Integer.parseInt(hashMap.get("lessonId"));
             button.setText(hashMap.get("lessonName"));
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
             LinearLayout linearLayout=(LinearLayout)findViewById(R.id.content_day);
             Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             linearLayout.addView(button,layoutParams);
