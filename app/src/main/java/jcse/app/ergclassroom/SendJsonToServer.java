@@ -1,5 +1,6 @@
 package jcse.app.ergclassroom;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.DataOutputStream;
@@ -14,9 +15,14 @@ import java.net.URL;
 public class SendJsonToServer implements Runnable{
 final static String DEBUG_TAG="Send Json to Server";
 String gotJsonString;
-
+Context mContext;
     public SendJsonToServer(String jsonString){
         this.gotJsonString=jsonString;
+
+    }
+    public SendJsonToServer(String jsonString, Context context){
+        this.gotJsonString=jsonString;
+        this.mContext=context;
     }
 
 
@@ -24,35 +30,34 @@ String gotJsonString;
     public void run() {
 
         try {
-            URL url = new URL("http://egr2.jcse-himat.com/api/timestamps");
+            URL url = new URL("http://egr2.jcse-himat.com/useractivity/useractivities");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
             conn.setDoOutput(true);
             conn.setChunkedStreamingMode(0);
 
-           /* Uri.Builder builder = new Uri.Builder()
-                    .appendQueryParameter("firstParam",gotJsonString);
-            String query = builder.build().getEncodedQuery();*/
-
-            //OutputStream os = conn.getOutputStream();
             DataOutputStream writer = new DataOutputStream(
                     conn.getOutputStream ());
-           //// BufferedWriter writer = new BufferedWriter(
-           //         new OutputStreamWriter(os, "UTF-8"));
+            //Writer writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+            //writer.write(gotJsonString);
             writer.writeBytes(gotJsonString);
 
             int response = conn.getResponseCode();
             Log.d(DEBUG_TAG, "The response is: " + response);
-            if(response == 200){
+            if(response == 201){
 
+                SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
+                Boolean clearContents= saveJsonToFile.clearFileContents(mContext,"timestamps.txt");
+                Log.d(DEBUG_TAG, "Timstamps clear: "+clearContents);
             }
             writer.flush();
             writer.close();
             //os.close();
 
-            conn.connect();
+            //conn.connect();
         }catch (MalformedURLException malformedURLException){
 
             Log.e("SendJsonToServer",malformedURLException.getMessage());

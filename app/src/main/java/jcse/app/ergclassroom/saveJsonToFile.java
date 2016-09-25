@@ -72,4 +72,10 @@ public class SaveJsonToFile {
             System.gc();
         }
     }
+    public boolean clearFileContents(Context context, String filename) {
+        File file = new File(context.getFilesDir(), filename);
+        Boolean deleted = file.delete();
+        File file1 = new File(context.getFilesDir(),filename);
+        return deleted;
+    }
 }

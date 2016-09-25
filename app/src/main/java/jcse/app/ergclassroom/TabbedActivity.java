@@ -173,10 +173,10 @@ public class TabbedActivity extends AppCompatActivity {
         String user =prefs.getString("user","no user");
         try {
             jsonObject.put("user",user);
-            jsonObject.put("TypeOfActivity",flag);
-            jsonObject.put("TermId", termId);
-            jsonObject.put("WeekId", weekId);
-            jsonObject.put("LessonId", lessonId);
+            jsonObject.put("typeOfActivity",flag);
+            jsonObject.put("termId", termId);
+            jsonObject.put("weekId", weekId);
+            jsonObject.put("lessonId", lessonId);
             jsonObject.put("StartTime", timeStamp);
             jsonObject.put("EndTime", endTimeStamp);
 
