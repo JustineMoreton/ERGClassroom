@@ -144,8 +144,10 @@ Log.d(DEBUG_TAG,"image on create");
                 String hashSlideName = hashmap.get("slideFileName" + (k));
                 String modDate = hashmap.get("slideSrcDate" + (k));
                 String slideName = termId + "_" + weekId + "_" + lessonId + "_" + hashSlideName;
+                String newSlideUrl=slideUrl.replaceAll(" ","%20");
                 try {
-                    URL get_url = new URL(slideUrl);
+
+                    URL get_url = new URL(newSlideUrl);
                     connection = (HttpURLConnection) get_url.openConnection();
                     connection.setDoInput(true);
                     // connection.setDoOutput(true);
@@ -170,34 +172,34 @@ Log.d(DEBUG_TAG,"image on create");
                     }
                 }
 
-                int resourceNumber = Integer.parseInt(hashmap.get("resourceNumber"));
+                int resourceNumber = Integer.parseInt(hashmap.get("resourceNumber"+(k)));
                 for (int j = 0; j < resourceNumber; j++) {
                     String url = hashmap.get((k) + "resourceSrcUrl" + (j));
                     String hashResName = hashmap.get((k) + "resourceRefName" + (j));
                     String modResDate = hashmap.get((k) + "resourceSrcDate" + (j));
                     String type = hashmap.get((k) + "type" + (j));
-
+                    String newUrl=url.replaceAll(" ","%20");
 
                     try {
-                        URL get_url = new URL(url);
+                        URL get_url = new URL(newUrl);
                         connection = (HttpURLConnection) get_url.openConnection();
                         connection.setDoInput(true);
                         //connection.setDoOutput(true);
                         connection.connect();
                         is = new BufferedInputStream(connection.getInputStream());
-                        if (type.equals("image")) {
+                        if (type.equals("Image")) {
                             final Bitmap bitmap = BitmapFactory.decodeStream(is);
                             saveImageToInternalStorage(bitmap, getApplicationContext(), hashResName, modResDate);
                         }
-                        if (type.equals("video")) {
+                        if (type.equals("Video")) {
                             saveVideoToInternalStorage(is, getApplicationContext(), hashResName, modResDate);
 
                         }
-                        if (type.equals("pdf")) {
+                        if (type.equals("Pdf")) {
                             saveVideoToInternalStorage(is, getApplicationContext(), hashResName, modResDate);
 
                         }
-                        if (type.equals("audio")) {
+                        if (type.equals("Audio")) {
                             saveVideoToInternalStorage(is, getApplicationContext(), hashResName, modResDate);
 
                         }

@@ -72,10 +72,10 @@ public class SlideFragmentDialog extends DialogFragment{
 
 
         View view = null;
-        if (mType.equals("video")||mType.equals("audio")||mType.equals("image")) {
+        if (mType.equals("Video")||mType.equals("Audio")||mType.equals("Image")) {
             view = getActivity().getLayoutInflater().inflate(R.layout.vdeo_layout, new RelativeLayout(getActivity()), false);
         }
-        if(mType.equals("pdf")){
+        if(mType.equals("Pdf")){
             view = getActivity().getLayoutInflater().inflate(R.layout.pdf_layout, new LinearLayout(getActivity()),false);
         }
         // Build dialog
@@ -85,7 +85,7 @@ public class SlideFragmentDialog extends DialogFragment{
 
         builder.setContentView(view);
 
-        if (mType.equals("video")) {
+        if (mType.equals("Video")) {
             getActivity().getWindow().setFormat(PixelFormat.TRANSLUCENT);
             Log.v("Vidoe-URI", mUriPath + "");
             btnClose=(Button) view.findViewById(R.id.closeButton);
@@ -118,7 +118,7 @@ public class SlideFragmentDialog extends DialogFragment{
             videoView.seekTo(0);
             videoView.start();
         }
-        if (mType.equals("pdf")) {
+        if (mType.equals("Pdf")) {
 
              try{
 
@@ -159,7 +159,7 @@ public class SlideFragmentDialog extends DialogFragment{
 
 
 
-        }if (mType.equals("audio")) {
+        }if (mType.equals("Audio")) {
         builder.setTitle("Audio file: you might need to use headphones");
         btnClose=(Button) view.findViewById(R.id.closeButton);
         final MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), mUriPath);
@@ -188,7 +188,7 @@ public class SlideFragmentDialog extends DialogFragment{
             }
         });
         mediaPlayer.start();
-    }if (mType.equals("image")){
+    }if (mType.equals("Image")){
         String filePath=file.getAbsolutePath();
         ImageView imageView = (ImageView) builder.findViewById(R.id.dialogImageView);
         btnClose=(Button) view.findViewById(R.id.closeButton);

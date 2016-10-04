@@ -32,7 +32,6 @@ Context mContext;
         try {
             URL url = new URL("http://egr2.jcse-himat.com/useractivity/useractivities");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 
@@ -51,7 +50,7 @@ Context mContext;
 
                 SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
                 Boolean clearContents= saveJsonToFile.clearFileContents(mContext,"timestamps.txt");
-                Log.d(DEBUG_TAG, "Timstamps clear: "+clearContents);
+                Log.d(DEBUG_TAG, "Timestamps clear: "+clearContents);
             }
             writer.flush();
             writer.close();

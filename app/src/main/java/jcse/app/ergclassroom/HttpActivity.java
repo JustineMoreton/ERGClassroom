@@ -97,7 +97,8 @@ public class HttpActivity extends Activity {
     // Before attempting to fetch the URL, makes sure that there is a network connection.
     public void getURl() {
         // Gets the URL from the UI's text field.
-        String stringUrl ="http://www.json-generator.com/api/json/get/clXwSWKyBe?indent=2";
+        String stringUrl ="\n" +
+                "http://www.json-generator.com/api/json/get/cqukbwmPDm?indent=2";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -134,7 +135,7 @@ public class HttpActivity extends Activity {
             try {
                 URL url = new URL(myurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setReadTimeout(20000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);

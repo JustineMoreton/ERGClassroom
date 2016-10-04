@@ -171,7 +171,9 @@ public class TabbedActivity extends AppCompatActivity {
 
         prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         String user =prefs.getString("user","no user");
+        String userId=prefs.getString("userId","no user Id");
         try {
+            jsonObject.put("userId",userId);
             jsonObject.put("user",user);
             jsonObject.put("typeOfActivity",flag);
             jsonObject.put("termId", termId);

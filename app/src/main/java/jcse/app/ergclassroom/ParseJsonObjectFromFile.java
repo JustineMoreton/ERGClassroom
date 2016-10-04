@@ -40,7 +40,7 @@ public class ParseJsonObjectFromFile extends IntentService{
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Toast.makeText(this, "service JSON starting", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "service JSON starting", Toast.LENGTH_SHORT).show();
         getFileText= readFromFile();
         directoryValues= createJsonObject((getFileText));
         Intent broadcastIntent = new Intent();
@@ -163,7 +163,7 @@ public class ParseJsonObjectFromFile extends IntentService{
                                                             JSONArray resources = slide.getJSONArray("resources");
                                                             if(resources.length()>0){
                                                                 int resourceNumber=resources.length();
-                                                                directoryValues.put("resourceNumber",""+(resourceNumber));
+                                                                directoryValues.put("resourceNumber"+(s),""+(resourceNumber));
                                                                 for(int r =0; r<resources.length(); r++){
                                                                     JSONObject oneResource=resources.getJSONObject(r);
                                                                     if(oneResource != null){

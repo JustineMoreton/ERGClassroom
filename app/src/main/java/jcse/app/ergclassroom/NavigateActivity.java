@@ -59,6 +59,7 @@ public class NavigateActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove("user");
         editor.remove("pass");
+        editor.remove("userId");
         editor.apply();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

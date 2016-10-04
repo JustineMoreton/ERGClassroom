@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity{
     SharedPreferences prefs;
     boolean userFirstLogin;
     boolean synced;
+    String userId;
     final Connection connection = new Connection(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,11 +85,18 @@ public class MainActivity extends AppCompatActivity{
             trueUser =compareUser(getEditText(name),getEditText(pass));
 
         }
+        if(synced==false && userFirstLogin==true){
+            trueUser =compareUser(getEditText(name),getEditText(pass));
+        }
         if(synced==true && userFirstLogin==false){
 
             trueUser =compareUser(getEditText(name),getEditText(pass));
         }
         if(trueUser==true) {
+            editor.putString("user",getEditText(name));
+            editor.putString("password",getEditText(pass));
+            editor.putString("userId",userId);
+            editor.apply();
             Intent intent = new Intent(this, NavigateActivity.class);
             startActivityForResult(intent, 1, null);
         }
@@ -121,7 +129,9 @@ public class MainActivity extends AppCompatActivity{
                 if(userObject.getString("userName").equals(user)){
                     foundUser=true;
                     if(userObject.getString("password").equals(pass)){
+                       userId = userObject.getString("userId");
                         passMatch=true;
+                        i=userArray.length();
                         continue;
                     }
                 }
