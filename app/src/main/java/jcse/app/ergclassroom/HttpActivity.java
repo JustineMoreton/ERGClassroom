@@ -58,13 +58,17 @@ public class HttpActivity extends Activity {
         registerReceiver(imageResponseReceiver, intentFilter);
         Intent sendIntent =getIntent();
         sendIntent.putExtra("imagesent",imagessent);
+        //setResult for StartActivityForResults in Navigate activity
         setResult(Activity.RESULT_OK,sendIntent);
-         finish();
+        Log.d("http on create","in on create after setResult");
+        finish();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        
         unregisterReceiver(this.receiver);
         unregisterReceiver(this.imageResponseReceiver);
 
@@ -98,7 +102,7 @@ public class HttpActivity extends Activity {
     public void getURl() {
         // Gets the URL from the UI's text field.
         String stringUrl ="\n" +
-                "http://www.json-generator.com/api/json/get/cqukbwmPDm?indent=2";
+                "http://www.json-generator.com/api/json/get/cfexDpsROW?indent=2";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -193,7 +197,6 @@ public class HttpActivity extends Activity {
                SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
                 saveJsonToFile.createJsonFile(getApplicationContext(),lessonString,"lessonStructure.txt");
                 saveJsonToFile.createJsonFile(getApplicationContext(),usersString,"users.txt");
-
             }catch (JSONException jsonException){
                 Log.d(DEBUG_TAG, "cant read JSOn object");
             }
@@ -211,6 +214,7 @@ public class HttpActivity extends Activity {
             directoryValues=
                     (ArrayList<HashMap<String, String>>)intent.getSerializableExtra("directoryValues");
             parseStatus=intent.getBooleanExtra("finishedParse",false);
+
             Intent service = new Intent(context,ImageHttpActivity.class);
             service.putExtra("directoryValues",directoryValues);
             if(parseStatus==true){

@@ -119,6 +119,8 @@ public class TabbedClassroomActivity extends AppCompatActivity {
         String timeStampsJson = jsonObject.toString();
         SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
         saveJsonToFile.appendJsonFile(getApplicationContext(),timeStampsJson,"timestamps.txt");
+        saveJsonToFile.appendExternalJsonFile(getApplicationContext(),timeStampsJson,"timestamps.txt");
+
         try {
             ReadFromFile readFromFile = new ReadFromFile(getApplicationContext());
             String timstampString =readFromFile.readFromFile("timestamps.txt");

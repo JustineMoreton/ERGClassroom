@@ -69,6 +69,7 @@ public class DayActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), NavigateActivity.class);
                 startActivity(intent);
+
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);

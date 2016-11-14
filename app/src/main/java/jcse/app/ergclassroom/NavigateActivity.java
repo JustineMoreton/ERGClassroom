@@ -22,13 +22,13 @@ public class NavigateActivity extends AppCompatActivity {
                                       @Override
                                       public void onClick(View view){
                                           connection.createConnection();
-                                           GetTextFromFile getTextFromFile= new GetTextFromFile(NavigateActivity.this,"timestamps.txt");
-
-                                          String sendString="{\"useractivity\":["+(getTextFromFile.readFromFile())+"]}";
-                                          Runnable sendJsonToServer = new SendJsonToServer(sendString,NavigateActivity.this);
-                                          new Thread(sendJsonToServer).start();
+//                                           GetTextFromFile getTextFromFile= new GetTextFromFile(NavigateActivity.this,"timestamps.txt");
+//
+//                                          String sendString="{\"useractivity\":["+(getTextFromFile.readFromFile())+"]}";
+//                                          Runnable sendJsonToServer = new SendJsonToServer(sendString,NavigateActivity.this);
+//                                          new Thread(sendJsonToServer).start();
                                           Intent intent = new Intent(view.getContext(),HttpActivity.class);
-                                          startActivity(intent);
+                                          startActivityForResult(intent,RESULT_OK);
                                           button.setText(R.string.synced);
                                       }
                                   }
