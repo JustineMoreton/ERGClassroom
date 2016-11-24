@@ -28,7 +28,7 @@ public class NavigateActivity extends AppCompatActivity {
 //                                          Runnable sendJsonToServer = new SendJsonToServer(sendString,NavigateActivity.this);
 //                                          new Thread(sendJsonToServer).start();
                                           Intent intent = new Intent(view.getContext(),HttpActivity.class);
-                                          startActivityForResult(intent,RESULT_OK);
+                                          startActivity(intent);
                                           button.setText(R.string.synced);
                                       }
                                   }

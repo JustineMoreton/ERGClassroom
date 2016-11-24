@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile files('library/java-json.jar')
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

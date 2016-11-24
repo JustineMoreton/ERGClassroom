@@ -1,7 +1,7 @@
 package jcse.app.ergclassroom;
 
-import android.app.IntentService;
-import android.app.PendingIntent;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,64 +26,49 @@ import java.util.HashMap;
 /**
  * Created by Justine on 2016/06/07.
  */
-public class ImageHttpActivity extends IntentService{
+public class ImageHttpActivity extends Activity {
     private static final String DEBUG_TAG = "IMAGEHttpActivity";
-    ArrayList<HashMap<String, String>> directoryValue = new ArrayList<HashMap<String, String>>();
+    ValueArray directoryValue = new ValueArray();
+    ArrayList<HashMap<String,String>> changeDirectoryValues = new ArrayList<>();
+    HashMap<String,String>[] arrayofHashMaps;
+    ProgressDialog progDialog;
+    public void onCreate(Bundle savedInstanceState) {
 
-    HashMap<String, String>[] arrayofHashMaps;
-    public ImageHttpActivity(){
-        super("ImageHttpActivity");
-    }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_http);
+        Log.d(DEBUG_TAG,"image on create");
+         Intent intent = getIntent();
 
-    public ImageHttpActivity(String name, ArrayList<HashMap<String, String>> directoryValue) {
-        super(name);
-        this.directoryValue = directoryValue;
-    }
-
-    public IBinder onBind(Intent arg0) {
-        return null;
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        Log.d(DEBUG_TAG,"image handle intent");
-        Toast.makeText(this, "service IMAGE starting", Toast.LENGTH_SHORT).show();
-        directoryValue = (ArrayList<HashMap<String, String>>) intent.getSerializableExtra("directoryValues");
-
-        arrayofHashMaps = (HashMap<String, String>[]) directoryValue.toArray(new HashMap[directoryValue.size()]);
+        directoryValue = (ValueArray) intent.getSerializableExtra("directoryValues");
+        changeDirectoryValues=directoryValue.getArrayList();
+        arrayofHashMaps = (HashMap<String, String>[]) changeDirectoryValues.toArray(new HashMap[changeDirectoryValues.size()]);
 
         getURl(arrayofHashMaps);
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(HttpActivity.ImageResponseReceiver.ACTION_RESP);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra("imageResponse","sent to Image receiver");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        try {
-            // Perform the operation associated with our pendingIntent
-            pendingIntent.send();
-        } catch (PendingIntent.CanceledException e) {
-            e.printStackTrace();
-        }
 
     }
+    public void startJsonService() {
+        startService(new Intent(getBaseContext(), ParseJsonObjectFromFile.class));
 
-
-
-
-    public void onCreate(Bundle savedInstanceState) {
-        //super.onCreate(savedInstanceState);
-Log.d(DEBUG_TAG,"image on create");
-
-        //start resource activity, pass arrayList in intent
-        //finish();
     }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        Toast.makeText(this, "service IMAGE FIN", Toast.LENGTH_SHORT).show();
+        dismissProgressDialog();
+        finish();
+    }
+    private void showProgressDialog() {
+        if (progDialog == null) {
+            progDialog = new ProgressDialog(ImageHttpActivity.this);
+            progDialog.setMessage("Resources downloading...");
+            progDialog.setCanceledOnTouchOutside(false);
+        }
+        progDialog.show();
+    }
+    private void dismissProgressDialog() {
+        if (progDialog != null && progDialog.isShowing()) {
+            progDialog.dismiss();
+        }
     }
 
     // When user clicks button, calls AsyncTask.
@@ -110,6 +93,11 @@ Log.d(DEBUG_TAG,"image on create");
     // an InputStream. Finally, the InputStream is converted into a string, which is
     // displayed in the UI by the AsyncTask's onPostExecute method.
     private class DownloadWebpageTask extends AsyncTask<HashMap<String,String>, Void, String> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog();
+        }
 
 
         @Override
@@ -323,7 +311,11 @@ Log.d(DEBUG_TAG,"image on create");
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-         Log.d(DEBUG_TAG, " " +result);
+            if (ImageHttpActivity.this.isDestroyed()) { // or call isFinishing() if min sdk version < 17
+                return;
+            }
+            dismissProgressDialog();
+            Log.e(DEBUG_TAG,result);
         }
 
     }

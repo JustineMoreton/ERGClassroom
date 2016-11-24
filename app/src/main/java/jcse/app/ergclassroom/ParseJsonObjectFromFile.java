@@ -1,11 +1,11 @@
 package jcse.app.ergclassroom;
 
-import android.app.IntentService;
-import android.app.PendingIntent;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.IBinder;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,55 +22,84 @@ import java.util.HashMap;
 /**
  * Created by Justine on 2016/06/09.
  */
-public class ParseJsonObjectFromFile extends IntentService{
+public class ParseJsonObjectFromFile extends Activity{
     private static final String DEBUG_TAG = "ParseJsonObject";
-    int mStartMode;
+    ProgressDialog progDialog;
     String getFileText;
-    ArrayList<HashMap<String,String>> directoryValues;
+    ValueArray directoryValues;
 
-    public ParseJsonObjectFromFile() {
-        super("ParseJsonObjectFromFile");
+    public ParseJsonObjectFromFile(){
     }
+
+
 
     @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_http);
+        startTask();
+        Log.d(DEBUG_TAG, "On create Parse Json Object From File");
+       // finishAfterTransition();
+
     }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-
-        //Toast.makeText(this, "service JSON starting", Toast.LENGTH_SHORT).show();
-        getFileText= readFromFile();
-        directoryValues= createJsonObject((getFileText));
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(HttpActivity.ResponseReceiver.ACTION_RESP);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra("directoryValues",directoryValues);
-        broadcastIntent.putExtra("finishedParse",true);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        try {
-            // Perform the operation associated with our pendingIntent
-            pendingIntent.send();
-        } catch (PendingIntent.CanceledException e) {
-            e.printStackTrace();
-        }
-        HttpActivity.ResponseReceiver.completeWakefulIntent(intent);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(DEBUG_TAG, "Json ON HANDLE INTENT");
-    }
-
+public void startTask(){
+    getFileText =readFromFile();
+    new ParseJsonToArrayList().execute(getFileText);
+}
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "JSON object Parsed", Toast.LENGTH_LONG).show();
+        dismissProgressDialog();
+       // finish();
+    }
+    private void showProgressDialog() {
+        if (progDialog == null) {
+            progDialog = new ProgressDialog(ParseJsonObjectFromFile.this);
+            progDialog.setMessage("Parsing...");
+            progDialog.setCanceledOnTouchOutside(false);
+        }
+        progDialog.show();
+    }
+    private void dismissProgressDialog() {
+        if (progDialog != null && progDialog.isShowing()) {
+            progDialog.dismiss();
+        }
+    }
+private class ParseJsonToArrayList extends AsyncTask<String, Void, ArrayList>{
+    protected void onPreExecute() {
+        super.onPreExecute();
+        showProgressDialog();
+    }
+    @Override
+    protected ArrayList doInBackground(String... fileText) {
+
+            return createJsonObject(fileText[0]);
+
+    }
+    @Override
+    protected void onPostExecute(ArrayList result){
+       directoryValues =new ValueArray();
+        directoryValues.setArrayList(result);
+
+        if (ParseJsonObjectFromFile.this.isDestroyed()) { // or call isFinishing() if min sdk version < 17
+            Intent intent = new Intent(ParseJsonObjectFromFile.this,ImageHttpActivity.class);
+            intent.putExtra("directoryValues",directoryValues);
+            startActivity(intent);
+        }
+        dismissProgressDialog();
+        try{
+            Intent intent = new Intent(ParseJsonObjectFromFile.this,ImageHttpActivity.class);
+            intent.putExtra("directoryValues",directoryValues);
+            startActivity(intent);
+            ParseJsonObjectFromFile.this.finish();
+        }catch(Exception e){
+            Log.e("START IMAGE HTP",e.getMessage());
+        }
+
     }
 
+}
     private String readFromFile() {
 
             String ret = "";
