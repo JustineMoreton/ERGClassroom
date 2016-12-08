@@ -1,8 +1,12 @@
 package jcse.app.ergclassroom;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +24,19 @@ public class MainActivity extends AppCompatActivity{
 
     SharedPreferences prefs;
     boolean userFirstLogin;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
+
+    }
+    @Override
+            protected void onPause(){
+        super.onPause();
+      //  unregisterReceiver(broadcastReceiver);
+    }
+
     boolean synced;
     String userId;
     final Connection connection = new Connection(this);
@@ -27,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-
+        LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
         if(prefs.contains("first_login")){
 
         }else{userFirstLogin= prefs.getBoolean("first_login",true);}
@@ -70,12 +87,12 @@ public class MainActivity extends AppCompatActivity{
 
         if(synced==true && userFirstLogin==true){
             if(isEmpty(name)){
-                Toast.makeText(this, "You did not enter a username", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "You did not enter a username", Toast.LENGTH_LONG).show();
                 return;
             }
 
             if(isEmpty(pass)){
-                Toast.makeText(this, "You did not enter a password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "You did not enter a password", Toast.LENGTH_LONG).show();
                 return;
             }
             editor.putString("user",getEditText(name));
@@ -155,7 +172,19 @@ public class MainActivity extends AppCompatActivity{
         startActivityForResult(intent,0,null);
         button.setText(R.string.synced);
     }
-
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //String response = intent.getStringExtra("TYPE");  //get the response of message from MyGcmListenerService 1 - lock or 0 -Unlock
+            int response = intent.getIntExtra("TYPE",0);
+            if (response == 201) // 1 == lock
+            {
+                Toast.makeText(getApplication(),"User info successfully sent", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplication(), "There was a problem send the user info, please try again later", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
 
 }

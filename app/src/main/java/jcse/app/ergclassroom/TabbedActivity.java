@@ -1,5 +1,6 @@
 package jcse.app.ergclassroom;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -73,6 +75,7 @@ public class TabbedActivity extends AppCompatActivity {
     String timeStamp;
     JSONObject jsonObject;
     HashMap<String,String[]> resourceArrays;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,17 +144,48 @@ public class TabbedActivity extends AppCompatActivity {
         assert fab != null;
 
             fab.setOnClickListener(new View.OnClickListener() {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                Intent intent = new Intent(TabbedActivity.this, DayActivity.class);
+                                intent.setFlags(1);
+                                intent.putExtra("termId",termId);
+                                intent.putExtra("weekId",weekId);
+                                startActivity(intent);
+
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                Intent negIntent = new Intent(TabbedActivity.this, DayActivity.class);
+                                negIntent.setFlags(1);
+                                negIntent.putExtra("termId",termId);
+                                negIntent.putExtra("weekId",weekId);
+                                startActivity(negIntent);
+                        }
+                    }
+                };
+
                 @Override
 
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), DayActivity.class);
-                    intent.setFlags(1);
-                    intent.putExtra("termId",termId);
-                    intent.putExtra("weekId",weekId);
-                    startActivity(intent);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TabbedActivity.this);
+                    builder.setMessage("Have you completed this lesson?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
                 }
+
             });
 
+
+    }
+
+
+
+
+
+    @Override
+    protected void onPause(){
+        super.onPause();
 
     }
     @Override
@@ -175,7 +209,7 @@ public class TabbedActivity extends AppCompatActivity {
         try {
             jsonObject.put("userId",userId);
             jsonObject.put("user",user);
-            jsonObject.put("typeOfActivity",flag);
+            jsonObject.put("typeOfActivity",getflagActivity(flag));
             jsonObject.put("termId", termId);
             jsonObject.put("weekId", weekId);
             jsonObject.put("lessonId", lessonId);
@@ -197,6 +231,22 @@ public class TabbedActivity extends AppCompatActivity {
         }catch (Exception io){
             Log.d("read File", io.getMessage());
         }
+
+
+
+    }
+    public String getflagActivity(int flag){
+        String activity="";
+        switch (flag){
+            case 1:
+                activity ="Preparation";
+                break;
+            case 0:
+                activity = "Classroom";
+                default:
+                    break;
+        }
+        return activity;
     }
 
 

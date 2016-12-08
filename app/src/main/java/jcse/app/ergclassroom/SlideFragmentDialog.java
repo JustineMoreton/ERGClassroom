@@ -22,7 +22,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import java.io.File;
@@ -72,8 +71,11 @@ public class SlideFragmentDialog extends DialogFragment{
 
 
         View view = null;
-        if (mType.equals("Video")||mType.equals("Audio")||mType.equals("Image")) {
-            view = getActivity().getLayoutInflater().inflate(R.layout.vdeo_layout, new RelativeLayout(getActivity()), false);
+        if (mType.equals("Video")) {
+            view = getActivity().getLayoutInflater().inflate(R.layout.vdeo_layout, new LinearLayout(getActivity()), false);
+        }
+        if (mType.equals("Image")||mType.equals("Audio")) {
+            view = getActivity().getLayoutInflater().inflate(R.layout.image_layout, new LinearLayout(getActivity()), false);
         }
         if(mType.equals("Pdf")){
             view = getActivity().getLayoutInflater().inflate(R.layout.pdf_layout, new LinearLayout(getActivity()),false);

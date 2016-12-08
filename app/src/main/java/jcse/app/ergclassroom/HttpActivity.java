@@ -3,12 +3,15 @@ package jcse.app.ergclassroom;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,10 +36,27 @@ public class HttpActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http);
-        // checks connection first
-        // downloads json file in async task
-        getURl();
 
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        // checks connection first
+                        // downloads json file in async task
+                        getURl();
+
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        finish();
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HttpActivity.this);
+        builder.setMessage("Are you sure you want to dowload the entire lesson plan? This process may take up to an hour and you will not be able to use the tablet.").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
 
         Log.d("httpActivity","in on create");
       //  finishAfterTransition();
@@ -44,14 +64,15 @@ public class HttpActivity extends Activity {
     public void getURl() {
         // Gets the URL from the UI's text field.
         String stringUrl ="\n" +
-                "http://www.json-generator.com/api/json/get/bURKmYbYQy?indent=2";
+                "http://www.json-generator.com/api/json/get/bOpgZILBmG?indent=2";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             new DownloadWebpageTask().execute(stringUrl);
         } else {
-
+            Toast.makeText(this, "There is no network connection, please try again later", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 

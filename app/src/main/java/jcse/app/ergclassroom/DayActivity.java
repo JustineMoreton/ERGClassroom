@@ -67,7 +67,10 @@ public class DayActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), NavigateActivity.class);
+                Intent intent = new Intent(view.getContext(), WeekActivity.class);
+                intent.setFlags(1);
+                intent.putExtra("termId",termId);
+                intent.putExtra("weekId",weekId);
                 startActivity(intent);
 
             }
@@ -77,4 +80,9 @@ public class DayActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
 }

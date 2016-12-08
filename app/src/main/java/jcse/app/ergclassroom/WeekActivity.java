@@ -53,6 +53,16 @@ public class WeekActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), TermActivity.class);
+                intent.setFlags(1);
+                intent.putExtra("termId",termId);
+                startActivity(intent);
+            }
+        });
+        FloatingActionButton fabHome =(FloatingActionButton) findViewById(R.id.fabhome);
+        fabHome.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
                 Intent intent = new Intent(view.getContext(), NavigateActivity.class);
                 startActivity(intent);
             }

@@ -31,6 +31,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_return_arrow" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabhome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_action_home" />
-
 </android.support.design.widget.CoordinatorLayout>

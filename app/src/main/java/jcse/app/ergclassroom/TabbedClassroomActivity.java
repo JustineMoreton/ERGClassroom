@@ -106,7 +106,7 @@ public class TabbedClassroomActivity extends AppCompatActivity {
         try {
             jsonObject.put("userId",userId);
             jsonObject.put("user",user);
-            jsonObject.put("typeOfActivity",flag);
+            jsonObject.put("typeOfActivity",getflagActivity(flag));
             jsonObject.put("termId", termId);
             jsonObject.put("weekId", weekId);
             jsonObject.put("lessonId", lessonId);
@@ -129,6 +129,19 @@ public class TabbedClassroomActivity extends AppCompatActivity {
         }catch (Exception io){
             Log.d("read File", io.getMessage());
         }
+    }
+    public String getflagActivity(int flag){
+        String activity="";
+        switch (flag){
+            case 1:
+                activity ="Preparation";
+                break;
+            case 0:
+                activity = "Classroom";
+            default:
+                break;
+        }
+        return activity;
     }
     public class ClassSectionsPagerAdapter extends FragmentStatePagerAdapter {
 

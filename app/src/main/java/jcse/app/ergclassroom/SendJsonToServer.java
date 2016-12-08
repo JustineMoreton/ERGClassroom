@@ -1,6 +1,8 @@
 package jcse.app.ergclassroom;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.DataOutputStream;
@@ -23,6 +25,7 @@ Context mContext;
     public SendJsonToServer(String jsonString, Context context){
         this.gotJsonString=jsonString;
         this.mContext=context;
+
     }
 
 
@@ -30,6 +33,7 @@ Context mContext;
     public void run() {
 
         try {
+
             URL url = new URL("http://egr2.jcse-himat.com/useractivity/useractivities");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -45,13 +49,20 @@ Context mContext;
             writer.writeBytes(gotJsonString);
 
             int response = conn.getResponseCode();
+            Intent in = new Intent();
+            in.putExtra("TYPE",response);
+            in.setAction("NOW");
+//sendBroadcast(in);
+            LocalBroadcastManager.getInstance(this.mContext).sendBroadcast(in);
             Log.d(DEBUG_TAG, "The response is: " + response);
             if(response == 201){
 
                 SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
                 Boolean clearContents= saveJsonToFile.clearFileContents(mContext,"timestamps.txt");
                 Log.d(DEBUG_TAG, "Timestamps clear: "+clearContents);
+
             }
+
             writer.flush();
             writer.close();
             //os.close();

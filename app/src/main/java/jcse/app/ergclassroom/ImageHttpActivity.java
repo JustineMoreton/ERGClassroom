@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -32,11 +33,14 @@ public class ImageHttpActivity extends Activity {
     ArrayList<HashMap<String,String>> changeDirectoryValues = new ArrayList<>();
     HashMap<String,String>[] arrayofHashMaps;
     ProgressDialog progDialog;
+    public static final String USER_PREFS="userPrefs";
+    SharedPreferences prefs;
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http);
         Log.d(DEBUG_TAG,"image on create");
+        prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
          Intent intent = getIntent();
 
         directoryValue = (ValueArray) intent.getSerializableExtra("directoryValues");
@@ -311,11 +315,21 @@ public class ImageHttpActivity extends Activity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("first_login",true);
+            editor.putBoolean("first_synced",true);
+            editor.apply();
             if (ImageHttpActivity.this.isDestroyed()) { // or call isFinishing() if min sdk version < 17
-                return;
+                dismissProgressDialog();
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
             }
             dismissProgressDialog();
             Log.e(DEBUG_TAG,result);
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+            finish();
         }
 
     }

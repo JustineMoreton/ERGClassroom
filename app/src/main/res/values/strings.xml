@@ -6,13 +6,14 @@
     <string name="Well_done_lesson_done">Well done! How did it go?</string>
     <string name="Did_you_complete">Did you complete:</string>
     <string name="lesson_outcome">Did most of your learners achieve the lesson outcome?</string>
-    <string name="sync">Sync</string>
+    <string name="sync">Download lesson plans</string>
+    <string name="send_user_stats">Send my info</string>
     <string name="synced">Syncing</string>
     <string name="login">Please enter your supplied login name and password</string>
     <string name="prev">Prev</string>
     <string name="next">Next</string>
     <string name="close">Close</string>
-    <string name="preparation">In Preparation</string>
+    <string name="preparation">Lesson Plans</string>
     <string name="classroom">In Classroom</string>
     <string name="logout">Logout</string>
     <string name="closeX">X</string>
@@ -30,4 +31,8 @@
     <string name="title_activity_day">Days</string>
     <string name="title_activity_tabbed_classroom">In Classroom</string>
     <string name="title_activity_term">Term</string>
+    <string name="success">Your info was successfully sent</string>
+    <string name="no_success">There was a problem sending your info, please try again later</string>
+    <string name="primary_progress"></string>
+    <string name="secondary_progress"></string>
 </resources>
