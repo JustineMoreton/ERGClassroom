@@ -6,4 +6,6 @@
     <color name="colorSpinner">#4db6e7</color>
     <color name="spinnerbar">#4a5fd6</color>
     <color name="white">#ffffff</color>
+    <color name="true_term">#e72ac935</color>
+    <color name="true_week">#e72ac935</color>
 </resources>

@@ -47,8 +47,7 @@ public class NavigateActivity extends AppCompatActivity {
                      new Thread(sendJsonToServer).start();
             }
         });
-        ProgressBarSetup progressBarSetup = new ProgressBarSetup(NavigateActivity.this);
-        progressBarSetup.checkTerms();
+
         ProgressBar secondProgressBar = (ProgressBar) findViewById(R.id.progressBarSecond);
         secondProgressBar.setProgress(80);
 

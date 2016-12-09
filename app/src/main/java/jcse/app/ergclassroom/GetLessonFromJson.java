@@ -118,10 +118,14 @@ public class GetLessonFromJson{
                                     if (week != null) {
                                         String weekId = week.getString("weekId");
                                         String weekName = week.getString("weekName");
+                                        String startdate = week.getString("startdate");
+                                        String enddate = week.getString("enddate");
                                         HashMap<String, String> mapWeek = new HashMap<String, String>(mapTerm);
                                         mapTerm.putAll(mapWeek);
                                         mapWeek.put("weekId", weekId);
                                         mapWeek.put("weekName", weekName);
+                                        mapWeek.put("startdate",startdate);
+                                        mapWeek.put("enddate",enddate);
                                         arrayList.add(mapWeek);
 
                                     }

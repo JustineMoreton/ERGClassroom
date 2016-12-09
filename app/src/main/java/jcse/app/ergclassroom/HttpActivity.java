@@ -64,7 +64,7 @@ public class HttpActivity extends Activity {
     public void getURl() {
         // Gets the URL from the UI's text field.
         String stringUrl ="\n" +
-                "http://www.json-generator.com/api/json/get/bOpgZILBmG?indent=2";
+                "http://www.json-generator.com/api/json/get/bYSHrmtCwi?indent=2";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

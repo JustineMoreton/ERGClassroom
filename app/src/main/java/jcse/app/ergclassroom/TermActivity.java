@@ -43,8 +43,16 @@ private final String DEBUG_TAG="";
             hashMap=termList.get(i);
             Button button = new Button(this);
             final int Id = Integer.parseInt(hashMap.get("termId"+(i)));
+            String stringStartDate = hashMap.get("startDate" + (i));
+            String stringEndDate = hashMap.get("endDate" + (i));
+            TimeUseTracking timeUseTracking = new TimeUseTracking(TermActivity.this);
+            Boolean isTerm=timeUseTracking.checkDates(stringStartDate,stringEndDate);
+
             button.setText("Term "+hashMap.get("termId"+(i)));
             button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
+            if(isTerm){
+                button.setBackgroundResource(R.color.true_term);
+            }
             LinearLayout linearLayout =(LinearLayout) findViewById(R.id.content_profile);
             Toolbar.LayoutParams layoutParams =new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
             linearLayout.addView(button,layoutParams);

@@ -31,8 +31,15 @@ public class WeekActivity extends AppCompatActivity {
         for(int i=0; i<weekList.size(); i++){
             HashMap<String,String> hashMap;
             hashMap=weekList.get(i);
+            String stringStartDate = hashMap.get("startdate");
+            String stringEndDate = hashMap.get("enddate");
+            TimeUseTracking timeUseTracking = new TimeUseTracking(WeekActivity.this);
+            Boolean isWeek=timeUseTracking.checkDates(stringStartDate,stringEndDate);
             Button button= new Button(this);
             final int weekId =Integer.parseInt(hashMap.get("weekId"));
+            if(isWeek){
+                button.setBackgroundResource(R.color.true_week);
+            }
             button.setText(hashMap.get("weekName"));
             button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
             LinearLayout linearLayout=(LinearLayout)findViewById(R.id.content_week);

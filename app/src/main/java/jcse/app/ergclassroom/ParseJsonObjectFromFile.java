@@ -159,10 +159,14 @@ private class ParseJsonToArrayList extends AsyncTask<String, Void, ArrayList>{
                                 if(week != null){
                                     String weekId = week.getString("weekId");
                                     String weekName=week.getString("weekName");
+                                    String startdate=week.getString("startdate");
+                                    String enddate = week.getString("enddate");
                                     HashMap<String,String> mapWeek = new HashMap<String,String>(mapTerm);
                                     mapTerm.putAll(mapWeek);
                                     mapWeek.put("weekId",weekId);
                                     mapWeek.put("weekName",weekName);
+                                    mapWeek.put("startdate",startdate);
+                                    mapWeek.put("enddate",enddate);
                                     JSONArray lessons=week.getJSONArray("lessons");
                                     if(lessons.length()>0){
                                         for(int l=0; l<lessons.length();l++){
