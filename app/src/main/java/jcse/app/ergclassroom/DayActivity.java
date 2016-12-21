@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DayActivity extends AppCompatActivity {
 
@@ -26,6 +29,7 @@ public class DayActivity extends AppCompatActivity {
         final int flag= intent.getFlags();
         final int termId =intent.getIntExtra("termId",0);
         final int weekId= intent.getIntExtra("weekId",0);
+        final Boolean isWeek=intent.getBooleanExtra("isWeek",false);
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
         String fileText=getLessonFromJson.readFromFile();
         ArrayList<HashMap<String,String>> dayList =getLessonFromJson.getLessonsForDay(fileText,termId,weekId);
@@ -36,6 +40,11 @@ public class DayActivity extends AppCompatActivity {
             final int lessonId =Integer.parseInt(hashMap.get("lessonId"));
             button.setText(hashMap.get("lessonName"));
             button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
+            if(isWeek) {
+                if (dayOfWeek(hashMap.get("lessonName"))) {
+                    button.setBackgroundResource(R.color.true_week);
+                }
+            }
             LinearLayout linearLayout=(LinearLayout)findViewById(R.id.content_day);
             Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             linearLayout.addView(button,layoutParams);
@@ -84,5 +93,17 @@ public class DayActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
+    }
+    public Boolean dayOfWeek(String lessonName){
+        Boolean isDay = false;
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+
+            Calendar calendar = Calendar.getInstance();
+            String weekDay = dayFormat.format(calendar.getTime());
+
+        if (weekDay.equalsIgnoreCase(lessonName)){
+            isDay=true;
+        }
+        return isDay;
     }
 }

@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class NavigateActivity extends AppCompatActivity {
 
 //    Context mContext=getApplicationContext();
@@ -47,12 +50,43 @@ public class NavigateActivity extends AppCompatActivity {
                      new Thread(sendJsonToServer).start();
             }
         });
+        GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
+        String lessonFile = getLessonFromJson.readFromFile();
+        ArrayList<HashMap<String,String>> termList=getLessonFromJson.getTermList(lessonFile);
+        int countFinWeeks=0;
+        int weekSize =0;
+        for(int i =0; i<termList.size(); i++){
+            HashMap<String,String> hashMap;
+            hashMap=termList.get(i);
+            final int Id = Integer.parseInt(hashMap.get("termId"+(i)));
+            String stringStartDate = hashMap.get("startDate" + (i));
+            String stringEndDate = hashMap.get("endDate" + (i));
+            TimeUseTracking timeUseTracking = new TimeUseTracking(NavigateActivity.this);
+            Boolean isTerm=timeUseTracking.checkDates(stringStartDate,stringEndDate);
+            if(isTerm){
+                ArrayList<HashMap<String,String>> weekList=getLessonFromJson.getWeekList(lessonFile,Id);
+
+                for(int w=0; w<weekList.size(); w++) {
+                    weekSize=weekList.size();
+                    HashMap<String, String> wHashMap;
+                    wHashMap = weekList.get(w);
+                    String stringWEndDate = wHashMap.get("enddate");
+                    if(timeUseTracking.beforeEndDates(stringWEndDate)){
+                        countFinWeeks =countFinWeeks +1;
+                        //continue;
+                    }else{
+                        break;
+                    }
+                }
+            }
+        }
 
         ProgressBar secondProgressBar = (ProgressBar) findViewById(R.id.progressBarSecond);
-        secondProgressBar.setProgress(80);
+        secondProgressBar.setMax(weekSize);
+        secondProgressBar.setProgress(countFinWeeks);
 
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setProgress(50);
+/*        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setProgress(50);*/
 
 
     }

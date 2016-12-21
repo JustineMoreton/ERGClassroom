@@ -1,6 +1,7 @@
 package jcse.app.ergclassroom;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -19,6 +20,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,6 +47,9 @@ public class PlaceholderFragment extends Fragment {
     NoDefaultSpinner spinner=null;
     ArrayAdapter<String> spinnerAdapter=null;
     View rootView;
+    public static final String USER_PREFS="userPrefs";
+    SharedPreferences prefs;
+    JSONObject jsonObject;
     public PlaceholderFragment() {
 
     }
@@ -51,6 +58,7 @@ public class PlaceholderFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        prefs= this.getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
     }
 
     /**
@@ -111,9 +119,29 @@ public class PlaceholderFragment extends Fragment {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             if (userSelect) {
                 String type = mResourceTypes[pos];
-                File file = new File(getActivity().getFilesDir(), mResourceFiles[pos]);
+                String fileName =mResourceFiles[pos];
+                File file = new File(getActivity().getFilesDir(),fileName );
 
                 Uri uriPath = Uri.parse(file.toString());
+                Long timeStampLong = System.currentTimeMillis()/1000;
+                String timeStamp = timeStampLong.toString();
+
+                String user =prefs.getString("user","no user");
+                String userId=prefs.getString("userId","no user Id");
+                jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("User", user);
+                    jsonObject.put("Userid",userId);
+                    jsonObject.put("FileName",fileName);
+                    jsonObject.put("TimeStamp",timeStamp);
+                }catch (JSONException jsonException){
+                    Log.e("resourse log",jsonException.getMessage());
+                }
+                String timeStampsJson = jsonObject.toString();
+                SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
+                saveJsonToFile.appendJsonFile(getActivity(),timeStampsJson,"resourceUse.txt");
+                saveJsonToFile.appendExternalJsonFile(getActivity(),timeStampsJson,"resourceUse.txt");
+
                 SlideFragmentDialog slideFragmentDialog = SlideFragmentDialog.newInstance(type,uriPath);
 
 

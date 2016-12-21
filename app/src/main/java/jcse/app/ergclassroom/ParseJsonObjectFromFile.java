@@ -26,7 +26,7 @@ public class ParseJsonObjectFromFile extends Activity{
     private static final String DEBUG_TAG = "ParseJsonObject";
     ProgressDialog progDialog;
     String getFileText;
-    ValueArray directoryValues;
+    public static ValueArray directoryValues;
 
     public ParseJsonObjectFromFile(){
     }
@@ -83,15 +83,16 @@ private class ParseJsonToArrayList extends AsyncTask<String, Void, ArrayList>{
         directoryValues.setArrayList(result);
 
         if (ParseJsonObjectFromFile.this.isDestroyed()) { // or call isFinishing() if min sdk version < 17
-            Intent intent = new Intent(ParseJsonObjectFromFile.this,ImageHttpActivity.class);
-            intent.putExtra("directoryValues",directoryValues);
+            Intent intent = new Intent(getApplicationContext(),ImageHttpActivity.class);
+            //intent.putExtra("directoryValues",directoryValues);
             startActivity(intent);
         }
         dismissProgressDialog();
         try{
-            Intent intent = new Intent(ParseJsonObjectFromFile.this,ImageHttpActivity.class);
-            intent.putExtra("directoryValues",directoryValues);
+            Intent intent = new Intent(getApplicationContext(),ImageHttpActivity.class);
+            //intent.putExtra("directoryValues",directoryValues);
             startActivity(intent);
+
             ParseJsonObjectFromFile.this.finish();
         }catch(Exception e){
             Log.e("START IMAGE HTP",e.getMessage());

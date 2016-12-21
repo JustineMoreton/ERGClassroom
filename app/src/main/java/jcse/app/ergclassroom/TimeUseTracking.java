@@ -24,11 +24,14 @@ public class TimeUseTracking {
             try {
                 Date startDate= dateFormat.parse(stringStartDate);
                 Date endDate=dateFormat.parse(stringEndDate);
-                Date date = new Date();
-
-
-               // String stringDate=nowDate.toString();
-               // Date date = dateFormat.parse(stringDate);
+                Long timeInMillis = System.currentTimeMillis();
+                Date nowDate = new Date(timeInMillis);
+                calendar.setTime(nowDate);
+                calendar.set(Calendar.HOUR_OF_DAY,0);
+                calendar.set(Calendar.MINUTE,0);
+                calendar.set(Calendar.SECOND,0);
+                calendar.set(Calendar.MILLISECOND,0);
+                Date date = calendar.getTime();
                 if((date.after(startDate)||date.equals(startDate)) && (date.before(endDate)||date.equals(endDate))){
                     return true;
 
@@ -38,7 +41,30 @@ public class TimeUseTracking {
             }
         return false;
         }
+    public Boolean beforeEndDates(String stringEndDate){
+        Boolean endDateBool= false;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
+        Calendar calendar = Calendar.getInstance();
 
+        try {
+            Date endDate=dateFormat.parse(stringEndDate);
+            Long timeInMillis = System.currentTimeMillis();
+            Date nowDate = new Date(timeInMillis);
+            calendar.setTime(nowDate);
+            calendar.set(Calendar.HOUR_OF_DAY,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
+            Date date = calendar.getTime();
+            if((endDate.before(date)||endDate.equals(date))){
+                endDateBool =true;
+
+            }
+        }catch (ParseException parseException){
+            Log.e("parse exception",parseException.getMessage());
+        }
+        return endDateBool;
+    }
 
 
 }

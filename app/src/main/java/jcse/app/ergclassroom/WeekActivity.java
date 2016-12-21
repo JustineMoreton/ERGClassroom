@@ -34,7 +34,7 @@ public class WeekActivity extends AppCompatActivity {
             String stringStartDate = hashMap.get("startdate");
             String stringEndDate = hashMap.get("enddate");
             TimeUseTracking timeUseTracking = new TimeUseTracking(WeekActivity.this);
-            Boolean isWeek=timeUseTracking.checkDates(stringStartDate,stringEndDate);
+            final Boolean isWeek=timeUseTracking.checkDates(stringStartDate,stringEndDate);
             Button button= new Button(this);
             final int weekId =Integer.parseInt(hashMap.get("weekId"));
             if(isWeek){
@@ -50,6 +50,7 @@ public class WeekActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DayActivity.class);
                     intent.setFlags(flag);
+                    intent.putExtra("isWeek",isWeek);
                     intent.putExtra("termId",termId);
                     intent.putExtra("weekId",weekId);
                     startActivity(intent);

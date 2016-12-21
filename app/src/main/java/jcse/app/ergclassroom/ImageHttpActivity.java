@@ -29,7 +29,7 @@ import java.util.HashMap;
  */
 public class ImageHttpActivity extends Activity {
     private static final String DEBUG_TAG = "IMAGEHttpActivity";
-    ValueArray directoryValue = new ValueArray();
+
     ArrayList<HashMap<String,String>> changeDirectoryValues = new ArrayList<>();
     HashMap<String,String>[] arrayofHashMaps;
     ProgressDialog progDialog;
@@ -43,8 +43,8 @@ public class ImageHttpActivity extends Activity {
         prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
          Intent intent = getIntent();
 
-        directoryValue = (ValueArray) intent.getSerializableExtra("directoryValues");
-        changeDirectoryValues=directoryValue.getArrayList();
+        //directoryValue = (ValueArray) intent.getSerializableExtra("directoryValues");
+        changeDirectoryValues=ParseJsonObjectFromFile.directoryValues.getArrayList();
         arrayofHashMaps = (HashMap<String, String>[]) changeDirectoryValues.toArray(new HashMap[changeDirectoryValues.size()]);
 
         getURl(arrayofHashMaps);
