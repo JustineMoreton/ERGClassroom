@@ -1,6 +1,5 @@
 package jcse.app.ergclassroom;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -70,6 +68,8 @@ public class TabbedActivity extends AppCompatActivity {
      int weekId;
      int lessonId;
     int flag;
+    Long startTimeStampLong;
+    Long endTimeStampLong;
     SharedPreferences prefs;
     public static final String USER_PREFS="userPrefs";
     String timeStamp;
@@ -142,8 +142,18 @@ public class TabbedActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TabbedActivity.this, DayActivity.class);
+                intent.setFlags(1);
+                intent.putExtra("termId",termId);
+                intent.putExtra("weekId",weekId);
+                startActivity(intent);
+            }
+        });
 
-            fab.setOnClickListener(new View.OnClickListener() {
+/*            fab.setOnClickListener(new View.OnClickListener() {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -174,7 +184,7 @@ public class TabbedActivity extends AppCompatActivity {
                             .setNegativeButton("No", dialogClickListener).show();
                 }
 
-            });
+            });*/
 
 
     }
@@ -191,8 +201,8 @@ public class TabbedActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Long timeStampLong = System.currentTimeMillis()/1000;
-        timeStamp = timeStampLong.toString();
+        startTimeStampLong = System.currentTimeMillis()/1000;
+        timeStamp = startTimeStampLong.toString();
         jsonObject = new JSONObject();
 
     }
@@ -200,8 +210,8 @@ public class TabbedActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Long timeStampLong = System.currentTimeMillis()/1000;
-        String endTimeStamp = timeStampLong.toString();
+        endTimeStampLong = System.currentTimeMillis()/1000;
+        String endTimeStamp = endTimeStampLong.toString();
 
         prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         String user =prefs.getString("user","no user");
@@ -231,8 +241,11 @@ public class TabbedActivity extends AppCompatActivity {
         }catch (Exception io){
             Log.d("read File", io.getMessage());
         }
-
-
+       Long timeDiff=endTimeStampLong-startTimeStampLong;
+        if(timeDiff>(5*60)){
+            int userActivty=prefs.getInt(user,0);
+            userActivty =userActivty+1;
+        }
 
     }
     public String getflagActivity(int flag){

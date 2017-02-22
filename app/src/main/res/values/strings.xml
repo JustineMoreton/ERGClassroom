@@ -22,7 +22,7 @@
     <string name="section_format">section: %1$d</string>
     <string name="title_activity_start_lesson"></string>
     <string name="title_activity_profile">Terms</string>
-    <string name="title_activity_tabbed">In Preparation</string>
+    <string name="title_activity_tabbed">Today\'s Lesson</string>
     <string name="title_activity_finish_lesson"></string>
     <string name="title_activity_preparation_item"></string>
     <string name="title_activity_preparation_items"></string>

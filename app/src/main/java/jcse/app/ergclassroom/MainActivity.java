@@ -1,12 +1,8 @@
 package jcse.app.ergclassroom;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,11 +20,11 @@ public class MainActivity extends AppCompatActivity{
 
     SharedPreferences prefs;
     boolean userFirstLogin;
-
+    String isUser;
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
+       // LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
 
     }
     @Override
@@ -44,10 +40,18 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-        LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
+       // LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
         if(prefs.contains("first_login")){
+            isUser=prefs.getString("user",null);
 
-        }else{userFirstLogin= prefs.getBoolean("first_login",true);}
+            if(isUser!=null && !isUser.equals("no user")){
+                Intent intent=new Intent(this,NavigateActivity.class);
+                startActivity(intent);
+                return;
+            }
+        }else{
+            userFirstLogin= prefs.getBoolean("first_login",true);
+        }
 
 
 
@@ -60,6 +64,10 @@ public class MainActivity extends AppCompatActivity{
             editor.apply();
         setContentView(R.layout.activity_main_first_sync);
         }else{
+            /*String packageName = this.getPackageName();
+            ComponentName componentName = new ComponentName(packageName,packageName+".AliasActivity");
+            this.getPackageManager().setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_ENABLED,0);
+            */
             setContentView(R.layout.activity_main);
         }
 
@@ -97,6 +105,7 @@ public class MainActivity extends AppCompatActivity{
             }
             editor.putString("user",getEditText(name));
             editor.putString("password",getEditText(pass));
+            editor.putInt(getEditText(name),0);
             editor.apply();
 
             trueUser =compareUser(getEditText(name),getEditText(pass));
@@ -106,7 +115,6 @@ public class MainActivity extends AppCompatActivity{
             trueUser =compareUser(getEditText(name),getEditText(pass));
         }
         if(synced==true && userFirstLogin==false){
-
             trueUser =compareUser(getEditText(name),getEditText(pass));
         }
         if(trueUser==true) {
@@ -172,7 +180,7 @@ public class MainActivity extends AppCompatActivity{
         startActivityForResult(intent,0,null);
         button.setText(R.string.synced);
     }
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+/*    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //String response = intent.getStringExtra("TYPE");  //get the response of message from MyGcmListenerService 1 - lock or 0 -Unlock
@@ -184,7 +192,7 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(getApplication(), "There was a problem send the user info, please try again later", Toast.LENGTH_LONG).show();
             }
         }
-    };
+    };*/
 
 
 }

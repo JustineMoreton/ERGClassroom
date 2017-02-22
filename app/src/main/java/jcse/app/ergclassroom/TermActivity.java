@@ -47,8 +47,11 @@ private final String DEBUG_TAG="";
             String stringEndDate = hashMap.get("endDate" + (i));
             TimeUseTracking timeUseTracking = new TimeUseTracking(TermActivity.this);
             Boolean isTerm=timeUseTracking.checkDates(stringStartDate,stringEndDate);
-
-            button.setText("Term "+hashMap.get("termId"+(i)));
+            if(Id<5) {
+                button.setText("Term " + hashMap.get("termId" + (i)));
+            }else{
+                button.setText("Resources");
+            }
             button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
             if(isTerm){
                 button.setBackgroundResource(R.color.true_term);

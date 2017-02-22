@@ -14,62 +14,49 @@ import java.net.URL;
 import java.util.Scanner;
 
 /**
- * Created by Justine on 8/18/2016.
+ * Created by Justine on 1/12/2017.
  */
-public class SendJsonToServer implements Runnable{
-final static String DEBUG_TAG="Send Json to Server";
-String gotJsonString;
-Context mContext;
-    public SendJsonToServer(String jsonString){
+public class SendResJsonToServer implements Runnable{
+    final static String DEBUG_TAG="Send Res to Server";
+    String gotJsonString;
+    Context mContext;
+    public SendResJsonToServer(String jsonString){
         this.gotJsonString=jsonString;
 
     }
-    public SendJsonToServer(String jsonString, Context context){
+    public SendResJsonToServer(String jsonString, Context context){
         this.gotJsonString=jsonString;
         this.mContext=context;
 
     }
-
-
     @Override
     public void run() {
 
         try {
 
-            URL url = new URL("http://egr2.jcse-himat.com/useractivity/useractivities");
-
+            URL url = new URL("http://egr2.jcse-himat.com/resourcetracking/resourcetrackings");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
             conn.setRequestProperty("Accept", "application/json");
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setUseCaches(false);
             conn.setRequestProperty("Connection", "Keep-Alive");
-            //conn.setChunkedStreamingMode(0);
             conn.connect();
 
-           byte[] bytes =gotJsonString.getBytes("UTF-8");
+            byte[] bytes =gotJsonString.getBytes("UTF-8");
             DataOutputStream writer = new DataOutputStream(
                     conn.getOutputStream ());
-           // writer.writeInt(bytes.length);
-           // writer.write(bytes);
+
             /*DataOutputStream writer = new DataOutputStream(
-                    conn.getOutputStream ());
-            writer.writeUTF(gotJsonString);*/
-            writer.write(bytes);
-            Log.d("userJsonString",gotJsonString);
+                    conn.getOutputStream ());*/
             //Writer writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
             //writer.write(gotJsonString);
-
-
+            writer.write(bytes);
 
             int response = conn.getResponseCode();
-/*            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
-            }*/
             String message="";
             InputStream stream = conn.getErrorStream();
             if (stream == null) {
@@ -80,25 +67,27 @@ Context mContext;
                 message= scanner.next();
             }
             Intent in = new Intent();
-            in.putExtra("TYPE",response);
-            in.setAction("NOW");
+            in.putExtra("RESTYPE",response);
+            in.setAction("RESNOW");
 //sendBroadcast(in);
             LocalBroadcastManager.getInstance(this.mContext).sendBroadcast(in);
-            Log.d(DEBUG_TAG, "The response is: " + response);
+            Log.d(DEBUG_TAG, "Res response is: " + response);
             if(response == 201){
 
                 SaveJsonToFile saveJsonToFile = new SaveJsonToFile();
-                Boolean clearContents= saveJsonToFile.clearFileContents(mContext,"timestamps.txt");
-                Log.d(DEBUG_TAG, "Timestamps clear: "+clearContents);
+                Boolean clearContents= saveJsonToFile.clearFileContents(mContext,"resourceUse.txt");
+
+                Log.d(DEBUG_TAG, "Resource used clear: "+clearContents);
 
             }else{
-                Log.d(DEBUG_TAG,"USER_RESPONSE "+message);
+                Log.d(DEBUG_TAG,"RES_RESPONSE "+message);
             }
 
             writer.flush();
             writer.close();
             conn.disconnect();
 
+            //conn.connect();
         }catch (MalformedURLException malformedURLException){
 
             Log.e("SendJsonToServer",malformedURLException.getMessage());
@@ -107,5 +96,4 @@ Context mContext;
             Log.e("SendJsonToServer",ioException.getMessage());
         }
     }
-
 }

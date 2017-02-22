@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class NavigateActivity extends AppCompatActivity {
 
-//    Context mContext=getApplicationContext();
+    //    Context mContext=getApplicationContext();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +26,7 @@ public class NavigateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigate);
 
         LocalBroadcastManager.getInstance(NavigateActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
+        LocalBroadcastManager.getInstance(NavigateActivity.this).registerReceiver(resourceReceiver, new IntentFilter("RESNOW"));
       //  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
       //  setSupportActionBar(toolbar);
         final Button button =(Button) findViewById(R.id.button4);
@@ -48,6 +49,11 @@ public class NavigateActivity extends AppCompatActivity {
                      String sendString="{\"useractivity\":["+(getTextFromFile.readFromFile())+"]}";
                      Runnable sendJsonToServer = new SendJsonToServer(sendString,NavigateActivity.this);
                      new Thread(sendJsonToServer).start();
+
+                     GetTextFromFile getResTextFromFile= new GetTextFromFile(NavigateActivity.this,"resourceUse.txt");
+                     String sendResString="{\"resourceTracking\":["+(getResTextFromFile.readFromFile())+"]}";
+                     Runnable sendResJsonToServer = new SendResJsonToServer(sendResString,NavigateActivity.this);
+                     new Thread(sendResJsonToServer).start();
             }
         });
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
@@ -85,7 +91,7 @@ public class NavigateActivity extends AppCompatActivity {
         secondProgressBar.setMax(weekSize);
         secondProgressBar.setProgress(countFinWeeks);
 
-/*        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        /*ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setProgress(50);*/
 
 
@@ -126,4 +132,28 @@ public class NavigateActivity extends AppCompatActivity {
             }
         }
     };
+
+    private BroadcastReceiver resourceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //String response = intent.getStringExtra("TYPE");  //get the response of message from MyGcmListenerService 1 - lock or 0 -Unlock
+            int response = intent.getIntExtra("RESTYPE",0);
+            if (response == 201) // 1 == lock
+            {
+                Toast.makeText(getApplication(),"Resource info successfully sent", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplication(), "There was a problem sending the resource info, please try again later", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }
