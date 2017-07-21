@@ -9,15 +9,18 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:largeHeap="true"
         android:allowBackup="true"
-        android:icon="@mipmap/classimage2"
+        android:icon="@mipmap/ic_launcher_gobold"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,23 +28,24 @@
             android:name=".NavigateActivity"
             android:label="@string/title_activity_navigate"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape">
-
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.MainActivity" />
         </activity>
-        <!--<activity-alias
+        <!--
+            <activity-alias
             android:name=".AliasActivity"
             android:targetActivity=".NavigateActivity"
-            android:enabled="false"></activity-alias>-->
+            android:enabled="false"></activity-alias>
+        -->
         <activity
             android:name=".TermActivity"
             android:label="@string/title_activity_profile"
             android:parentActivityName=".NavigateActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.NavigateActivity" />
@@ -50,8 +54,8 @@
             android:name=".TabbedActivity"
             android:label="@string/title_activity_tabbed"
             android:parentActivityName=".DayActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.DayActivity" />
@@ -64,22 +68,24 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <activity android:name=".HttpActivity" />
-        <activity android:name=".ImageHttpActivity" />
-        <activity android:name=".ParseJsonObjectFromFile" />
-        <activity
-            android:name=".WeekActivity"
-            android:label="@string/title_activity_week"
-            android:parentActivityName=".TermActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+        <activity android:name=".ConnectActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".HttpActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ImageHttpActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ParseJsonObjectFromFile"
             android:screenOrientation="landscape"/>
         <activity
+            android:name=".WeekActivity"
+            android:parentActivityName=".TermActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".DayActivity"
-            android:label="@string/title_activity_day"
             android:parentActivityName=".WeekActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.WeekActivity" />
@@ -88,13 +94,21 @@
             android:name=".TabbedClassroomActivity"
             android:label="@string/title_activity_tabbed_classroom"
             android:parentActivityName=".DayActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jcse.app.ergclassroom.DayActivity" />
         </activity>
-
+        <activity
+            android:name=".UserTrackingActivity"
+            android:label="@string/title_activity_user_tracking"
+            android:parentActivityName=".NavigateActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jcse.app.ergclassroom.NavigateActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -12,15 +12,15 @@ public class Connection {
     public Connection(Context activityContext) {
     this.connectionContext=activityContext;
     }
-    public void createConnection(){
+    public boolean createConnection(){
         ConnectivityManager connMgr = (ConnectivityManager)
                 connectionContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-
+return true;
 
         } else {
-            // display error
+            return false;
         }
     }
 }

@@ -35,4 +35,5 @@
     <string name="no_success">There was a problem sending your info, please try again later</string>
     <string name="primary_progress"></string>
     <string name="secondary_progress"></string>
+    <string name="title_activity_user_tracking">UserTrackingActivity</string>
 </resources>

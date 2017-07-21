@@ -80,6 +80,7 @@ public class GetLessonFromJson{
                         mapTerm.put("termId"+(i),termid);
                         mapTerm.put("startDate"+(i),startDate);
                         mapTerm.put("endDate"+(i),endDate);
+                       // mapTerm.put("weekName"+(i),weekName);
                         arrayList.add(mapTerm);
 
 

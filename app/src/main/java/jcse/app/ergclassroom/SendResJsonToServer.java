@@ -34,7 +34,7 @@ public class SendResJsonToServer implements Runnable{
 
         try {
 
-            URL url = new URL("http://egr2.jcse-himat.com/resourcetracking/resourcetrackings");
+            URL url = new URL("http://egr.tshimologong.net/resourcetracking/resourcetrackings");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -55,7 +55,7 @@ public class SendResJsonToServer implements Runnable{
             //Writer writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
             //writer.write(gotJsonString);
             writer.write(bytes);
-
+            Log.d("Res Json String",gotJsonString);
             int response = conn.getResponseCode();
             String message="";
             InputStream stream = conn.getErrorStream();

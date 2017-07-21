@@ -68,6 +68,8 @@ public class TabbedActivity extends AppCompatActivity {
      int weekId;
      int lessonId;
     int flag;
+    boolean isWeek;
+    String weekName;
     Long startTimeStampLong;
     Long endTimeStampLong;
     SharedPreferences prefs;
@@ -85,7 +87,8 @@ public class TabbedActivity extends AppCompatActivity {
         termId =intent.getIntExtra("termId",0);
         weekId= intent.getIntExtra("weekId",0);
         lessonId= intent.getIntExtra("lessonId",0);
-
+        weekName=intent.getStringExtra("weekName");
+        isWeek=intent.getBooleanExtra("isWeek",false);
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
         String textFile=getLessonFromJson.readFromFile();
         ArrayList<HashMap<String,String>> arrayList=getLessonFromJson.getSlidesAndResourcesForLesson(textFile,termId,weekId,lessonId);
@@ -146,9 +149,10 @@ public class TabbedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(TabbedActivity.this, DayActivity.class);
-                intent.setFlags(1);
+                intent.putExtra("weekName",weekName);
                 intent.putExtra("termId",termId);
                 intent.putExtra("weekId",weekId);
+                intent.putExtra("isWeek",isWeek);
                 startActivity(intent);
             }
         });
@@ -206,10 +210,17 @@ public class TabbedActivity extends AppCompatActivity {
         jsonObject = new JSONObject();
 
     }
+    private void clearBackStack() {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() != 0) {
+            fragmentManager.popBackStackImmediate();
+        }
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
+        clearBackStack();
         endTimeStampLong = System.currentTimeMillis()/1000;
         String endTimeStamp = endTimeStampLong.toString();
 
@@ -219,7 +230,7 @@ public class TabbedActivity extends AppCompatActivity {
         try {
             jsonObject.put("userId",userId);
             jsonObject.put("user",user);
-            jsonObject.put("typeOfActivity",getflagActivity(flag));
+            jsonObject.put("typeOfActivity","inClassroom");
             jsonObject.put("termId", termId);
             jsonObject.put("weekId", weekId);
             jsonObject.put("lessonId", lessonId);

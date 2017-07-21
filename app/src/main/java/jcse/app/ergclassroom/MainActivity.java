@@ -1,8 +1,12 @@
 package jcse.app.ergclassroom;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs=getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-       // LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
+        LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(connectionReceiver, new IntentFilter("SERVERCONNECT"));
         if(prefs.contains("first_login")){
             isUser=prefs.getString("user",null);
 
@@ -176,23 +180,21 @@ public class MainActivity extends AppCompatActivity{
     public void firstSync(View view){
         Button button=(Button) findViewById(R.id.sync_button);
         connection.createConnection();
-        Intent intent = new Intent(view.getContext(),HttpActivity.class);
-        startActivityForResult(intent,0,null);
-        button.setText(R.string.synced);
+        Intent intent = new Intent(view.getContext(),ConnectActivity.class);
+        intent.putExtra("fromActivity",1);
+        startActivity(intent);
+
     }
-/*    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //String response = intent.getStringExtra("TYPE");  //get the response of message from MyGcmListenerService 1 - lock or 0 -Unlock
-            int response = intent.getIntExtra("TYPE",0);
-            if (response == 201) // 1 == lock
+            int response = intent.getIntExtra("NONE",0);
+            if (response == 0) // 0 == no server connection
             {
-                Toast.makeText(getApplication(),"User info successfully sent", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplication(), "There was a problem send the user info, please try again later", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplication(),"Unable to connect to server, please try again later", Toast.LENGTH_LONG).show();
             }
         }
-    };*/
-
+    };
 
 }

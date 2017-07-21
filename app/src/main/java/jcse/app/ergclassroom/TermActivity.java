@@ -34,7 +34,7 @@ private final String DEBUG_TAG="";
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent mIntent=getIntent();
-        final int flag=mIntent.getFlags();
+        //final int flag=mIntent.getFlags();
         GetLessonFromJson getLessonFromJson = new GetLessonFromJson(this);
         String lessonFile = getLessonFromJson.readFromFile();
         ArrayList<HashMap<String,String>> termList=getLessonFromJson.getTermList(lessonFile);
@@ -63,7 +63,6 @@ private final String DEBUG_TAG="";
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), WeekActivity.class);
-                    intent.setFlags(flag);
                     intent.putExtra("termId",Id);
                     startActivity(intent);
                 }
@@ -80,7 +79,9 @@ private final String DEBUG_TAG="";
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), NavigateActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                finish();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);

@@ -36,7 +36,7 @@ Context mContext;
 
         try {
 
-            URL url = new URL("http://egr2.jcse-himat.com/useractivity/useractivities");
+            URL url = new URL("http://egr.tshimologong.net/useractivity/useractivities");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
